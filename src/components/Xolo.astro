@@ -1,0 +1,19 @@
+---
+// Xolo, the mascot.  Used in education/community contexts only (Brand rules).
+interface Props { width?: number; label: string }
+const { width = 300, label } = Astro.props;
+---
+<svg role="img" aria-label={label} viewBox="0 0 240 200" width={width} style="height:auto;display:block">
+  <g stroke="#D9577E" stroke-width="11" fill="none" stroke-linecap="round">
+    <path d="M54 82 Q30 70 16 50" /><path d="M186 82 Q210 70 224 50" />
+    <path d="M48 102 Q26 100 6 96" /><path d="M192 102 Q214 100 234 96" />
+    <path d="M54 122 Q30 134 18 150" /><path d="M186 122 Q210 134 222 150" />
+  </g>
+  <ellipse cx="120" cy="112" rx="78" ry="62" fill="#F6A5BC" />
+  <ellipse cx="120" cy="150" rx="44" ry="18" fill="#F9C3D2" />
+  <circle cx="92" cy="104" r="8" fill="#0F1E1C" /><circle cx="148" cy="104" r="8" fill="#0F1E1C" />
+  <circle cx="95" cy="101" r="2.5" fill="#fff" /><circle cx="151" cy="101" r="2.5" fill="#fff" />
+  <ellipse cx="78" cy="126" rx="10" ry="5" fill="#D9577E" opacity=".45" />
+  <ellipse cx="162" cy="126" rx="10" ry="5" fill="#D9577E" opacity=".45" />
+  <path d="M106 128 Q120 140 134 128" stroke="#0F1E1C" stroke-width="4" fill="none" stroke-linecap="round" />
+</svg>

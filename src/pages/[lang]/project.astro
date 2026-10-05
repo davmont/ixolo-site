@@ -1,0 +1,79 @@
+---
+import Page from '../../layouts/Page.astro';
+import { fmt } from '../../lib/ph';
+import type { Lang } from '../../site.config';
+import copy from '../../i18n/pages/project';
+
+export const getStaticPaths = () => [{ params: { lang: 'en' } }, { params: { lang: 'es' } }];
+const lang = Astro.params.lang as Lang;
+const c = copy[lang];
+---
+<Page lang={lang} page="project" title={c.title} description={c.description}>
+  <section class="section tight">
+    <div class="wrap stack" style="--gap:32px">
+      <p class="eyebrow">{c.eyebrow}</p>
+      <h1 class="h1">{c.h1}</h1>
+      <div class="row">
+        <div class="card mv"><p class="eyebrow">{c.missionH}</p><p class="big">{c.mission}</p></div>
+        <div class="card mv"><p class="eyebrow">{c.visionH}</p><p class="big">{c.vision}</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight" id="values">
+    <div class="wrap stack" style="--gap:32px">
+      <p class="eyebrow">{c.valuesEyebrow}</p>
+      <h2 class="h2">{c.valuesH2}</h2>
+      <div class="grid" style="--cols:5">
+        {c.values.map(([h, p]) => <div class="card"><h3>{h}</h3><p>{p}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section mist" id="roadmap">
+    <div class="wrap stack" style="--gap:32px">
+      <p class="eyebrow">{c.roadmapEyebrow}</p>
+      <h2 class="h2">{c.roadmapH2}</h2>
+      <ol class="road">
+        {c.roadmap.map(([h, items], i) => (
+          <li class={i === 0 ? 'done' : i === 1 ? 'now' : ''}>
+            <h3>{h}</h3>
+            <ul>{(items as string[]).map((it) => <li set:html={fmt(it)} />)}</ul>
+          </li>
+        ))}
+      </ol>
+      <p class="mono" set:html={fmt(c.roadmapNote)} />
+    </div>
+  </section>
+
+  <section class="section" id="origin">
+    <div class="wrap row" style="--gap:56px">
+      <div class="stack" style="flex:1 1 480px; --gap:20px">
+        <p class="eyebrow">{c.originEyebrow}</p>
+        <h2 class="h2" set:html={fmt(c.originH2)} />
+        {c.origin.map((p) => <p class="lead" style="font-size:18px" set:html={fmt(p)} />)}
+        <p class="muted" set:html={fmt(c.independent)} />
+      </div>
+      <ol class="timeline">
+        {c.timeline.map(([y, t]) => <li><span>{y}</span><p set:html={fmt(t)} /></li>)}
+      </ol>
+    </div>
+  </section>
+</Page>
+<style>
+  .mv { flex-basis: 400px; }
+  .big { font: 700 24px/1.3 var(--f-head); color: var(--ink) !important; }
+  .road { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+  .road > li { background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--line); border-radius: 14px; padding: 24px; }
+  .road > li.done { border-top-color: var(--water); }
+  .road > li.now { border-top-color: var(--gill); }
+  .road h3 { font-size: 18px; margin-bottom: 12px; }
+  .road ul { margin: 0; padding-left: 18px; color: var(--graphite); line-height: 1.6; }
+  .road ul li + li { margin-top: 6px; }
+  .timeline { flex: 1 1 320px; list-style: none; margin: 0; padding: 0 0 0 20px; border-left: 2px solid var(--line); display: flex; flex-direction: column; gap: 22px; }
+  .timeline li { position: relative; }
+  .timeline li::before { content: ''; position: absolute; left: -28px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--gill); }
+  .timeline li:last-child::before { background: var(--water); }
+  .timeline span { font: 13px var(--f-mono); color: var(--water); }
+  .timeline p { font-weight: 600; }
+</style>

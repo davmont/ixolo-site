@@ -1,0 +1,21 @@
+---
+// Docs header: links back to the main site, then the default social icons.
+import Default from '@astrojs/starlight/components/SocialIcons.astro';
+import { ui, href } from '../../i18n/ui';
+import type { Lang } from '../../site.config';
+const lang = (Astro.locals.starlightRoute.locale ?? 'en') as Lang;
+const t = ui[lang];
+---
+<nav class="site-nav" aria-label={t.navLabel}>
+  <a href={href(lang, 'home')}>{lang === 'es' ? 'Inicio' : 'Home'}</a>
+  <a href={href(lang, 'download')}>{t.nav.download}</a>
+  <a href={href(lang, 'project')}>{t.nav.project}</a>
+  <a href={href(lang, 'community')}>{t.nav.community}</a>
+</nav>
+<Default />
+<style>
+  .site-nav { display: flex; gap: 1rem; margin-inline-end: .75rem; }
+  .site-nav a { color: var(--sl-color-gray-2); text-decoration: none; font-size: var(--sl-text-sm); }
+  .site-nav a:hover { color: var(--sl-color-white); }
+  @media (max-width: 72rem) { .site-nav { display: none; } }
+</style>

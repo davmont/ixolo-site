@@ -1,0 +1,39 @@
+/* Starlight theme mapped to the brand tokens. */
+@import '@fontsource/space-grotesk/700.css';
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/jetbrains-mono/400.css';
+
+:root {
+  --sl-font: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  --sl-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Dark theme (Starlight default). */
+  --sl-color-accent-low: #0F3A35;
+  --sl-color-accent: #4FC2B3;
+  --sl-color-accent-high: #BDEDE6;
+  --sl-color-black: #0C1716;
+  --sl-color-gray-6: #12221F;
+  --sl-color-gray-5: #23403A;
+}
+:root[data-theme='light'] {
+  --sl-color-accent-low: #D3ECE8;
+  --sl-color-accent: #0B6B61;
+  --sl-color-accent-high: #084F48;
+  --sl-color-white: #0F1E1C;
+  --sl-color-black: #F4F6F5;
+  --sl-color-gray-1: #1B2B29;
+  --sl-color-gray-2: #2F403D;
+  --sl-color-gray-3: #4A5A57;
+  --sl-color-gray-5: #D5DDDA;
+  --sl-color-gray-6: #EAF0EE;
+  --sl-color-gray-7: #F4F6F5;
+}
+h1, h2, h3, .site-title { font-family: 'Space Grotesk', 'Helvetica Neue', sans-serif; }
+.site-title { font-weight: 700; letter-spacing: -.02em; }
+
+/* Placeholder chip, same as the marketing pages. */
+.ph {
+  font-family: var(--sl-font-mono); font-size: .85em; font-weight: 500;
+  background: #FFF3C4; color: #6B4E00; border: 1px dashed #C9A227;
+  border-radius: 4px; padding: 0 4px; white-space: nowrap;
+}

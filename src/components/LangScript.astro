@@ -1,0 +1,11 @@
+---
+// Remembers the language of the page being read, so the root URL (/) sends
+// the visitor back to it next time.  First visit: / picks from the browser.
+// Shared by the marketing pages and the docs (Starlight head).
+---
+<script is:inline>
+  try {
+    var l = document.documentElement.lang.slice(0, 2);
+    if (l === 'en' || l === 'es') localStorage.setItem('ixolo-lang', l);
+  } catch (e) {}
+</script>

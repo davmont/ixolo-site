@@ -1,0 +1,43 @@
+---
+import Logo from './Logo.astro';
+import { ui, href, doc } from '../i18n/ui';
+import { site, type Lang } from '../site.config';
+import { fmt } from '../lib/ph';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const f = t.footer;
+const cols = [
+  { h: f.system, links: [[f.downloads, href(lang, 'download')], [f.releaseNotes, doc(lang, 'reference/release-notes')], [f.requirements, href(lang, 'download', 'requirements')]] },
+  { h: f.learn, links: [[f.docs, href(lang, 'docs')], [f.architecture, doc(lang, 'learn/architecture')], [f.education, href(lang, 'docs', 'learn')]] },
+  { h: f.project, links: [[f.mission, href(lang, 'project')], [f.roadmap, href(lang, 'project', 'roadmap')], [f.brand, href(lang, 'brand')]] },
+  { h: f.community, links: [[f.contribute, href(lang, 'community')], [f.source, site.repo], [f.coc, href(lang, 'community', 'conduct')]] },
+];
+---
+<footer class="ftr">
+  <div class="wrap stack" style="--gap:40px">
+    <div class="row" style="--gap:40px">
+      <div class="brand stack" style="--gap:14px">
+        <Logo variant="inverse" />
+        <p>{t.tagline}</p>
+      </div>
+      {cols.map((c) => (
+        <div class="col">
+          <h2>{c.h}</h2>
+          {c.links.map(([l, u]) => <a href={u}>{l}</a>)}
+        </div>
+      ))}
+    </div>
+    <p class="legal" set:html={fmt(t.legal)} />
+  </div>
+</footer>
+<style>
+  .ftr { background: #0F1E1C; color: #E6EEEB; padding: 64px 0 40px; }
+  .brand { flex: 2 1 260px; }
+  .brand p { color: #A9BDB8; font-size: 15px; max-width: 34ch; }
+  .col { flex: 1 1 140px; display: flex; flex-direction: column; gap: 8px; }
+  h2 { margin: 0 0 6px; font: 500 12px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: #A9BDB8; }
+  .col a { color: #E6EEEB; text-decoration: none; font-size: 15px; padding: 4px 0; }
+  .col a:hover { color: #F08CA8; }
+  .legal { padding-top: 24px; border-top: 1px solid #2A3B38; color: #A9BDB8; font-size: 13px; }
+</style>

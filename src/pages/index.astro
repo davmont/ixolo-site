@@ -1,0 +1,36 @@
+---
+// Root URL: send the visitor to /en/ or /es/.
+//  1. a language they chose before (toggle, or the last one they read), else
+//  2. the first browser language we support, else
+//  3. English.
+// Done in the browser so it works on any static host (Plesk, GitHub Pages…).
+import { site, defaultLang } from '../site.config';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{site.name}</title>
+  <link rel="alternate" hreflang="en" href="/en/" />
+  <link rel="alternate" hreflang="es" href="/es/" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script is:inline define:vars={{ fallback: defaultLang }}>
+    var supported = ['en', 'es'], lang = null;
+    try { lang = localStorage.getItem('ixolo-lang'); } catch (e) {}
+    if (supported.indexOf(lang) < 0) {
+      lang = fallback;
+      var prefs = navigator.languages || [navigator.language || ''];
+      for (var i = 0; i < prefs.length; i++) {
+        var p = String(prefs[i]).slice(0, 2).toLowerCase();
+        if (supported.indexOf(p) >= 0) { lang = p; break; }
+      }
+    }
+    location.replace('/' + lang + '/' + location.search + location.hash);
+  </script>
+  <noscript><meta http-equiv="refresh" content={`0; url=/${defaultLang}/`} /></noscript>
+</head>
+<body>
+  <p><a href="/en/">English</a> · <a href="/es/">Español</a></p>
+</body>
+</html>

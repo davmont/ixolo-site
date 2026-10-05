@@ -1,0 +1,130 @@
+---
+import Page from '../../layouts/Page.astro';
+import Xolo from '../../components/Xolo.astro';
+import { href, doc } from '../../i18n/ui';
+import { fmt, fmtText, text } from '../../lib/ph';
+import copy from '../../i18n/pages/home';
+import type { Lang } from '../../site.config';
+
+export const getStaticPaths = () => [{ params: { lang: 'en' } }, { params: { lang: 'es' } }];
+const lang = Astro.params.lang as Lang;
+const c = copy[lang];
+const qemu = `qemu-system-x86_64 -enable-kvm -cpu host -m 2G -smp 2 \\\n  -cdrom ${text('iso')}`;
+---
+<Page lang={lang} page="home" title={c.title} description={c.description}>
+  <section class="section hero">
+    <div class="wrap row" style="--gap:56px; align-items:center">
+      <div class="stack copy">
+        <p class="eyebrow">{c.eyebrow}</p>
+        <h1 class="h1">{c.h1}</h1>
+        <p class="lead" set:html={fmt(c.lead)} />
+        <div class="row" style="--gap:14px; padding-top:8px">
+          <a href={href(lang, 'download')} class="btn btn-primary" set:html={fmt(c.ctaDownload)} />
+          <a href={href(lang, 'docs')} class="btn btn-ghost">{c.ctaDocs}</a>
+        </div>
+        <p class="mono">{c.badges}</p>
+      </div>
+      <div class="art">
+        <div class="mascot"><Xolo label={fmtText(c.xolo)} /></div>
+        <div class="term demo">
+          <p class="cap">{c.demoCap}</p>
+<pre><span class="dim"># kill -9 $(pidof igc)</span>
+{c.demo[0]}
+{c.demo[1]} <span class="ok">{c.demo[2]}</span>
+<span class="dim"># ping -c 1 10.0.2.2</span>
+1 packets transmitted, 1 received</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap stack" style="--gap:36px">
+      <p class="eyebrow" set:html={fmt(c.whyEyebrow)} />
+      <h2 class="h2">{c.whyH2}</h2>
+      <div class="grid">
+        {c.why.map(([h, p]) => (
+          <div class="card"><h3>{h}</h3><p set:html={fmt(p)} /></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section dark">
+    <div class="wrap row" style="--gap:56px; align-items:center">
+      <div class="stack" style="flex:1 1 380px; --gap:20px">
+        <p class="eyebrow">{c.archEyebrow}</p>
+        <h2 class="h2">{c.archH2}</h2>
+        <p class="lead">{c.archLead}</p>
+        <a href={doc(lang, 'learn/architecture')} class="more">{c.archMore}</a>
+      </div>
+      <ol class="layers">
+        {c.layers.map(([n, h, p]) => (
+          <li class={n === '1' ? 'k' : ''}>
+            <span class="n">{n}</span>
+            <div><strong>{h}</strong><span>{p}</span></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap stack" style="--gap:36px">
+      <p class="eyebrow">{c.forEyebrow}</p>
+      <h2 class="h2">{c.forH2}</h2>
+      <div class="grid" style="--cols:4">
+        {c.audiences.map(([tag, h, p]) => (
+          <div class="card"><span class="tag">{tag}</span><h3>{h}</h3><p>{p}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section mist">
+    <div class="wrap row" style="--gap:32px">
+      <div class="stack" style="flex:1 1 420px; --gap:16px">
+        <h3 class="h3">{c.tryH3}</h3>
+        <p class="muted">{c.tryP}</p>
+        <div class="term"><pre>{qemu}</pre></div>
+        <a href={doc(lang, 'start/quickstart')} class="more">{c.tryMore}</a>
+      </div>
+      <div class="card release">
+        <p class="mono" set:html={fmt(c.relMeta)} />
+        <h3 class="h3" set:html={fmt(c.relH3)} />
+        <ul>{c.relItems.map((i) => <li>{i}</li>)}</ul>
+        <a href={doc(lang, 'reference/release-notes')} class="more">{c.relMore}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap row" style="--gap:48px; align-items:center">
+      <div style="flex:0 1 220px"><Xolo width={220} label={fmtText(c.xolo)} /></div>
+      <div class="stack" style="flex:1 1 420px; --gap:16px">
+        <p class="eyebrow">{c.xoloEyebrow}</p>
+        <h2 class="h2">{c.xoloH2}</h2>
+        <p class="lead" style="font-size:18px" set:html={fmt(c.xoloP)} />
+        <a href={href(lang, 'brand')} class="more">{c.xoloMore}</a>
+      </div>
+    </div>
+  </section>
+</Page>
+
+<style>
+  .hero { padding: 88px 0 72px; }
+  .copy { flex: 1 1 480px; }
+  .art { flex: 1 1 400px; display: flex; flex-direction: column; align-items: center; }
+  .mascot { width: 300px; max-width: 80%; }
+  .demo { width: 100%; max-width: 480px; margin-top: -8px; }
+  .h3 { font-size: 28px; }
+  .layers { flex: 1 1 460px; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .layers li { display: flex; align-items: center; gap: 20px; background: var(--panel-2); border: 1px solid var(--panel-line); border-radius: 12px; padding: 20px 24px; }
+  .layers li.k { background: #0B6B61; }
+  .layers .n { font: 14px var(--f-mono); color: var(--gill); width: 24px; }
+  .layers div { display: flex; flex-direction: column; gap: 4px; }
+  .layers strong { font: 700 20px var(--f-head); color: #fff; }
+  .layers span:not(.n) { font-size: 15px; color: var(--panel-text); }
+  .release { flex: 1 1 420px; padding: 32px; }
+  .release ul { margin: 0; padding-left: 20px; line-height: 1.8; }
+</style>

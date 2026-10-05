@@ -1,0 +1,89 @@
+---
+import Page from '../../../layouts/Page.astro';
+import { doc } from '../../../i18n/ui';
+import { fmt } from '../../../lib/ph';
+import type { Lang } from '../../../site.config';
+import { groups, designDocs, hub } from '../../../i18n/pages/docs';
+import { getCollection } from 'astro:content';
+
+export const getStaticPaths = () => [{ params: { lang: 'en' } }, { params: { lang: 'es' } }];
+const lang = Astro.params.lang as Lang;
+const c = hub[lang];
+// Stub pages carry a sidebar badge until they are written.
+const entries = await getCollection('docs');
+const isStub = (slug: string) =>
+  entries.find((e) => e.id === `en/docs/${slug}`)?.data.sidebar?.badge !== undefined;
+---
+<Page lang={lang} page="docs" title={c.title} description={c.description}>
+  <section class="section tight">
+    <div class="wrap stack" style="--gap:20px">
+      <p class="eyebrow">{c.eyebrow}</p>
+      <h1 class="h1">{c.h1}</h1>
+      <div id="search" class="search" data-lang={lang} data-placeholder={c.search}></div>
+    </div>
+  </section>
+
+  <section class="section tight" style="padding-top:0" id="groups">
+    <div class="wrap groups">
+      {groups.map((g) => (
+        <div class="card" id={g.id}>
+          <h2>{g[lang][0]}</h2>
+          <p set:html={fmt(g[lang][1])} />
+          <ul>
+            {g.items.map(([slug, en, es]) => (
+              <li>
+                <a href={doc(lang, slug)}>{lang === 'es' ? es : en}</a>
+                {isStub(slug) && <span class="draft">{c.draft}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section mist" id="design">
+    <div class="wrap stack" style="--gap:28px">
+      <p class="eyebrow">{c.designEyebrow}</p>
+      <h2 class="h2">{c.designH2}</h2>
+      <p class="lead">{c.designP}</p>
+      <div class="designs">
+        {designDocs.map(([slug, file, en, es]) => (
+          <a class="dd" href={doc(lang, slug)}>
+            <span class="mono">{file}</span>
+            <strong>{(lang === 'es' ? es : en)[0]}</strong>
+            <span class="muted">{(lang === 'es' ? es : en)[1]}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+  <script is:inline>
+    // Pagefind is the docs search index Starlight builds (absent in `astro dev`).
+    (function () {
+      var el = document.getElementById('search');
+      var s = document.createElement('script');
+      s.src = '/pagefind/pagefind-ui.js';
+      s.onload = function () {
+        new PagefindUI({ element: el, showImages: false, resetStyles: false,
+          translations: { placeholder: el.dataset.placeholder } });
+      };
+      document.head.appendChild(s);
+    })();
+  </script>
+</Page>
+
+<style>
+  .search { max-width: 720px; --pagefind-ui-primary: var(--water); --pagefind-ui-text: var(--ink); --pagefind-ui-background: var(--card); --pagefind-ui-border: var(--line); --pagefind-ui-font: var(--f-body); }
+  .groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+  .groups h2 { font-size: 22px; }
+  .groups ul { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .groups a { font-weight: 600; text-decoration: none; }
+  .groups a:hover { text-decoration: underline; }
+  .draft { margin-left: 8px; font: 11px var(--f-mono); color: var(--graphite); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; }
+  .designs { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .dd { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: var(--ink); }
+  .dd:hover { border-color: var(--water); }
+  .dd strong { font: 700 20px var(--f-head); }
+</style>

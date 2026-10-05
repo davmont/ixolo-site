@@ -1,0 +1,87 @@
+---
+import Page from '../../layouts/Page.astro';
+import { doc } from '../../i18n/ui';
+import { fmt, tokens } from '../../lib/ph';
+import type { Lang } from '../../site.config';
+import copy from '../../i18n/pages/community';
+
+export const getStaticPaths = () => [{ params: { lang: 'en' } }, { params: { lang: 'es' } }];
+const lang = Astro.params.lang as Lang;
+const c = copy[lang];
+/** '{issues}' -> its URL, or '#' while the token is unset. */
+const link = (u: string) => {
+  const m = u.match(/^\{(\w+)\}$/);
+  return m ? (tokens[m[1]] ?? '#') : u;
+};
+---
+<Page lang={lang} page="community" title={c.title} description={c.description}>
+  <section class="section tight">
+    <div class="wrap stack" style="--gap:20px">
+      <p class="eyebrow">{c.eyebrow}</p>
+      <h1 class="h1">{c.h1}</h1>
+      <p class="lead" set:html={fmt(c.lead)} />
+    </div>
+  </section>
+
+  <section class="section dark">
+    <div class="wrap stack" style="--gap:32px">
+      <p class="eyebrow">{c.howEyebrow}</p>
+      <ol class="steps">
+        {c.steps.map(([h, p], i) => (
+          <li><span class="n">{i + 1}</span><h3>{h}</h3><p set:html={fmt(p)} /></li>
+        ))}
+      </ol>
+      <a class="more" href={doc(lang, 'develop/contributing')}>{c.howMore}</a>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="wrap grid" style="--cols:4">
+      {c.channels.map(([h, p, l, u]) => (
+        <div class="card">
+          <h3>{h}</h3><p>{p}</p>
+          <a class="more" href={link(u)} set:html={fmt(l)} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section tight" style="padding-top:0">
+    <div class="wrap row">
+      <div class="card hw"><h3>{c.hardwareH3}</h3><p>{c.hardwareP}</p></div>
+      <div class="card" id="conduct" style="flex-basis:420px">
+        <h3>{c.conductH2}</h3>
+        <ul>{c.conduct.map((i) => <li set:html={fmt(i)} />)}</ul>
+        <p class="mono">{c.conductNote}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section mist" id="news">
+    <div class="wrap stack" style="--gap:32px">
+      <p class="eyebrow">{c.newsEyebrow}</p>
+      <h2 class="h2">{c.newsH2}</h2>
+      <div class="stack" style="--gap:12px">
+        {c.news.map(([d, cat, h, p]) => (
+          <article class="news">
+            <p class="mono"><span set:html={fmt(d)} /> · {cat}</p>
+            <h3 set:html={fmt(h)} />
+            <p class="muted" set:html={fmt(p)} />
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Page>
+<style>
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .steps li { background: var(--panel-2); border: 1px solid var(--panel-line); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 8px; }
+  .steps .n { font: 14px var(--f-mono); color: var(--gill); }
+  .steps h3 { color: #fff; font-size: 20px; }
+  .steps p { color: var(--panel-text); }
+  .steps code { color: var(--gill); }
+  .hw { border-color: var(--gill); }
+  .card ul { margin: 0; padding-left: 20px; }
+  .news { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 24px 28px; display: flex; flex-direction: column; gap: 6px; }
+  .news h3 { font-size: 22px; }
+</style>

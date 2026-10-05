@@ -1,0 +1,102 @@
+---
+import Page from '../../layouts/Page.astro';
+import Logo from '../../components/Logo.astro';
+import Xolo from '../../components/Xolo.astro';
+import { fmt, fmtText } from '../../lib/ph';
+import type { Lang } from '../../site.config';
+import copy from '../../i18n/pages/brand';
+
+export const getStaticPaths = () => [{ params: { lang: 'en' } }, { params: { lang: 'es' } }];
+const lang = Astro.params.lang as Lang;
+const c = copy[lang];
+---
+<Page lang={lang} page="brand" title={c.title} description={c.description}>
+  <section class="section tight">
+    <div class="wrap stack" style="--gap:20px">
+      <p class="eyebrow">{c.eyebrow}</p>
+      <h1 class="h1" set:html={fmt(c.h1)} />
+      {c.intro.map((p) => <p class="lead" set:html={fmt(p)} />)}
+    </div>
+  </section>
+
+  <section class="section mist">
+    <div class="wrap row" style="--gap:48px; align-items:center">
+      <div style="flex:0 1 260px"><Xolo width={260} label={fmtText(c.xolo)} /></div>
+      <div class="stack" style="flex:1 1 420px; --gap:16px">
+        <p class="eyebrow">{c.mascotEyebrow}</p>
+        <h2 class="h2">{c.mascotH2}</h2>
+        <p class="muted">{c.mascotP}</p>
+        <dl class="facts">
+          {c.facts.map(([k, v]) => <><dt>{k}</dt><dd set:html={fmt(v)} /></>)}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap stack" style="--gap:32px">
+      <p class="eyebrow">{c.logoEyebrow}</p>
+      <h2 class="h2">{c.logoH2}</h2>
+      <div class="row">
+        <figure class="lg light"><Logo size={56} /><figcaption>{c.logos[0]}</figcaption></figure>
+        <figure class="lg inv"><Logo variant="inverse" size={56} /><figcaption>{c.logos[1]}</figcaption></figure>
+        <figure class="lg mono-v"><Logo variant="mono" size={56} /><figcaption>{c.logos[2]}</figcaption></figure>
+      </div>
+      <div class="row">
+        <div class="card"><h3>{c.doH}</h3><p>{c.doP}</p></div>
+        <div class="card"><h3>{c.dontH}</h3><p>{c.dontP}</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section mist">
+    <div class="wrap stack" style="--gap:32px">
+      <p class="eyebrow">{c.colorEyebrow}</p>
+      <h2 class="h2">{c.colorH2}</h2>
+      <div class="swatches">
+        {c.colors.map(([hex, name, use]) => (
+          <div class="sw">
+            <div class="chip" style={`background:${hex}`} />
+            <p class="mono">{hex}</p><strong>{name}</strong><p class="muted">{use}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap stack" style="--gap:32px">
+      <p class="eyebrow">{c.typeEyebrow}</p>
+      <div class="row">
+        {c.type.map(([role, font, why, v]) => (
+          <div class="card">
+            <p class="mono">{role}</p>
+            <p class={`sample ${v}`}>{font}</p>
+            <p>{why}</p>
+          </div>
+        ))}
+      </div>
+      <p class="eyebrow" style="margin-top:24px">{c.voiceEyebrow}</p>
+      <div class="grid" style="--cols:4">
+        {c.voice.map(([h, p]) => <div class="card"><h3>{h}</h3><p>{p}</p></div>)}
+      </div>
+    </div>
+  </section>
+</Page>
+<style>
+  .facts { display: grid; grid-template-columns: max-content 1fr; gap: 10px 24px; margin: 8px 0 0; }
+  .facts dt { font: 13px var(--f-mono); color: var(--graphite); padding-top: 2px; }
+  .facts dd { margin: 0; font-weight: 600; }
+  .lg { flex: 1 1 260px; margin: 0; border-radius: 14px; border: 1px solid var(--line); padding: 40px 28px 20px; display: flex; flex-direction: column; align-items: center; gap: 28px; }
+  .lg figcaption { font-size: 14px; color: inherit; opacity: .8; text-align: center; }
+  .lg.light { background: #F4F6F5; color: #4A5A57; --ink: #0F1E1C; }
+  .lg.inv { background: #0F1E1C; color: #A9BDB8; }
+  .lg.mono-v { background: #fff; color: #0F1E1C; }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
+  .sw { display: flex; flex-direction: column; gap: 4px; }
+  .chip { height: 88px; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 8px; }
+  .sample { font-size: 30px; color: var(--ink) !important; }
+  .sample.head { font-family: var(--f-head); font-weight: 700; }
+  .sample.body { font-family: var(--f-body); }
+  .sample.mono { font-family: var(--f-mono); }
+</style>

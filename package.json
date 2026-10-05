@@ -1,0 +1,23 @@
+{
+  "name": "ixolo-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "rm -rf node_modules/.astro && astro build",
+    "preview": "astro preview",
+    "sync-docs": "node scripts/sync-docs.mjs",
+    "placeholders": "node scripts/placeholders.ts",
+    "clean": "rm -rf dist node_modules/.astro"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "^7.3.1",
+    "@astrojs/starlight": "^0.42.5",
+    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@fontsource/space-grotesk": "^5.3.0",
+    "astro": "^7.3.5",
+    "unist-util-visit": "^5.1.0"
+  }
+}

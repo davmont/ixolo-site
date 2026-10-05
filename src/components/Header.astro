@@ -1,0 +1,58 @@
+---
+import Logo from './Logo.astro';
+import { ui, href, type PageKey } from '../i18n/ui';
+import { site, type Lang } from '../site.config';
+import { fmtText } from '../lib/ph';
+interface Props { lang: Lang; page: PageKey }
+const { lang, page } = Astro.props;
+const t = ui[lang];
+const other: Lang = lang === 'en' ? 'es' : 'en';
+const items: PageKey[] = ['download', 'docs', 'project', 'community', 'brand'];
+---
+<header class="hdr">
+  <div class="wrap bar">
+    <a href={href(lang, 'home')} aria-label={fmtText(t.homeLabel)} class="home"><Logo /></a>
+    <nav aria-label={t.navLabel}>
+      {items.map((k) => (
+        <a href={href(lang, k)} aria-current={k === page ? 'page' : undefined}>{t.nav[k]}</a>
+      ))}
+    </nav>
+    <div class="tools">
+      <a href={site.repo} class="gh">{t.github}</a>
+      <a href={href(lang, 'download')} class="btn btn-primary cta">{t.cta}</a>
+      <span class="lang" role="group" aria-label={t.langLabel}>
+        <span aria-current="true" lang={lang}>{lang.toUpperCase()}</span>
+        <span aria-hidden="true">·</span>
+        <a href={href(other, page)} hreflang={other} lang={other}
+           data-lang={other}>{other.toUpperCase()}</a>
+      </span>
+    </div>
+  </div>
+</header>
+<script is:inline>
+  // An explicit toggle wins over the browser language from now on.
+  document.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      try { localStorage.setItem('ixolo-lang', a.dataset.lang); } catch (e) {}
+    });
+  });
+</script>
+<style>
+  .hdr { border-bottom: 1px solid var(--line); background: var(--paper); }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding-top: 14px; padding-bottom: 14px; }
+  .home { text-decoration: none; }
+  nav { display: flex; flex-wrap: wrap; gap: 4px 22px; }
+  nav a, .gh { color: var(--ink); text-decoration: none; font-size: 15px; padding: 12px 4px; }
+  nav a:hover, .gh:hover { color: var(--water); }
+  nav a[aria-current='page'] { color: var(--water); box-shadow: inset 0 -2px var(--water); }
+  .tools { display: flex; align-items: center; gap: 14px; }
+  .cta { font-size: 15px; padding: 12px 20px; border-radius: 8px; }
+  .lang { font: 13px var(--f-mono); color: var(--graphite); display: inline-flex; gap: 6px; align-items: center; }
+  .lang [aria-current] { color: var(--ink); font-weight: 600; }
+  .lang a { color: var(--graphite); text-decoration: none; padding: 12px 2px; }
+  .lang a:hover { color: var(--water); }
+  @media (max-width: 900px) {
+    nav { order: 3; width: 100%; overflow-x: auto; flex-wrap: nowrap; }
+    .gh { display: none; }
+  }
+</style>
