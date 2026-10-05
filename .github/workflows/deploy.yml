@@ -1,6 +1,6 @@
 # Build the site and publish it on GitHub Pages on every push to main.
 # One-time setup: repo Settings → Pages → Source: "GitHub Actions".
-# Custom domain: set it in Settings → Pages; public/CNAME is not needed.
+# Custom domain: set it in Settings → Pages, then clear BASE_PATH below.
 name: deploy
 on:
   push:
@@ -24,6 +24,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          # Served at davmont.github.io/ixolo-site/.  Once the custom domain
+          # is set (Settings -> Pages, and `domain` in src/site.config.ts),
+          # change this to an empty string.
+          BASE_PATH: /ixolo-site
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

@@ -1,4 +1,5 @@
 import type { Lang } from '../site.config';
+import { base } from '../lib/base.mjs';
 
 /** Site chrome (header, footer, shared labels).  Page copy lives in i18n/pages/. */
 export const ui = {
@@ -54,7 +55,7 @@ const slugs: Record<PageKey, string> = {
 };
 
 export const href = (lang: Lang, page: PageKey | string, hash = '') =>
-  `/${lang}/${page in slugs ? slugs[page as PageKey] : page}${hash ? '#' + hash : ''}`;
+  `${base}/${lang}/${page in slugs ? slugs[page as PageKey] : page}${hash ? '#' + hash : ''}`;
 
 /** Docs page link: doc(lang, 'start/quickstart'). */
-export const doc = (lang: Lang, slug: string) => `/${lang}/docs/${slug}/`;
+export const doc = (lang: Lang, slug: string) => `${base}/${lang}/docs/${slug}/`;

@@ -5,6 +5,7 @@ import { fmt } from '../../../lib/ph';
 import type { Lang } from '../../../site.config';
 import { groups, designDocs, hub } from '../../../i18n/pages/docs';
 import { getCollection } from 'astro:content';
+import { url } from '../../../lib/base.mjs';
 
 export const getStaticPaths = () => [{ params: { lang: 'en' } }, { params: { lang: 'es' } }];
 const lang = Astro.params.lang as Lang;
@@ -19,7 +20,7 @@ const isStub = (slug: string) =>
     <div class="wrap stack" style="--gap:20px">
       <p class="eyebrow">{c.eyebrow}</p>
       <h1 class="h1">{c.h1}</h1>
-      <div id="search" class="search" data-lang={lang} data-placeholder={c.search}></div>
+      <div id="search" class="search" data-lang={lang} data-placeholder={c.search} data-src={url('/pagefind/pagefind-ui.js')}></div>
     </div>
   </section>
 
@@ -58,13 +59,13 @@ const isStub = (slug: string) =>
       </div>
     </div>
   </section>
-  <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+  <link rel="stylesheet" href={url('/pagefind/pagefind-ui.css')} />
   <script is:inline>
     // Pagefind is the docs search index Starlight builds (absent in `astro dev`).
     (function () {
       var el = document.getElementById('search');
       var s = document.createElement('script');
-      s.src = '/pagefind/pagefind-ui.js';
+      s.src = el.dataset.src;
       s.onload = function () {
         new PagefindUI({ element: el, showImages: false, resetStyles: false,
           translations: { placeholder: el.dataset.placeholder } });

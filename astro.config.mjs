@@ -4,6 +4,7 @@ import starlight from '@astrojs/starlight';
 import { unified } from '@astrojs/markdown-remark';
 import remarkPlaceholders from './src/lib/remark-placeholders.mjs';
 import { site } from './src/site.config.ts';
+import { base } from './src/lib/base.mjs';
 
 // Docs sidebar: one group per section of the Documentation page.
 const group = (label, es, dir) => ({
@@ -11,8 +12,9 @@ const group = (label, es, dir) => ({
 });
 
 export default defineConfig({
-  // Absolute URLs (hreflang, sitemap).  Placeholder host until the domain exists.
-  site: site.domain ? `https://${site.domain}` : 'https://example.invalid',
+  // Absolute URLs (hreflang, sitemap).  GitHub Pages until the domain exists.
+  site: site.domain ? `https://${site.domain}` : 'https://davmont.github.io',
+  base: base || '/',
   trailingSlash: 'ignore',
   // Starlight's asides and our {{placeholder}} plugin need the remark pipeline.
   markdown: { processor: unified({ remarkPlugins: [remarkPlaceholders] }) },
@@ -42,7 +44,6 @@ export default defineConfig({
         group('Reference', 'Referencia', 'reference'),
         group('Design documents', 'Documentos de diseño', 'design'),
       ],
-      // Our own 404 page is not needed yet; Starlight's is localized.
     }),
   ],
 });

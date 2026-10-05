@@ -10,6 +10,7 @@ import LangScript from '../components/LangScript.astro';
 import { ui, href, type PageKey } from '../i18n/ui';
 import { site, languages, type Lang } from '../site.config';
 import { fmtText } from '../lib/ph';
+import { url } from '../lib/base.mjs';
 
 interface Props { lang: Lang; page: PageKey; title: string; description: string }
 const { lang, page, title, description } = Astro.props;
@@ -22,11 +23,11 @@ const fullTitle = page === 'home' ? `${site.name} — ${fmtText(title)}` : `${fm
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{fullTitle}</title>
   <meta name="description" content={fmtText(description)} />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
   {Object.keys(languages).map((l) => (
     <link rel="alternate" hreflang={l} href={new URL(href(l as Lang, page), Astro.site ?? Astro.url)} />
   ))}
-  <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site ?? Astro.url)} />
+  <link rel="alternate" hreflang="x-default" href={new URL(url('/'), Astro.site ?? Astro.url)} />
   <meta property="og:title" content={fullTitle} />
   <meta property="og:description" content={fmtText(description)} />
   <LangScript />

@@ -1,8 +1,10 @@
-// remark plugin: replaces {{token}} in docs Markdown with values from
+// remark plugin: prefixes root-relative links with the base path, and
+// replaces {{token}} in docs Markdown with values from
 // src/site.config.ts (through src/lib/ph.ts).  In prose an unset token
 // becomes a highlighted placeholder chip; in code it becomes [TOKEN] text.
 import { visit } from 'unist-util-visit';
 import { text, html, tokens } from './ph.ts';
+import { url } from './base.mjs';
 
 // A set value is plain text; only an unset one needs HTML (the chip).
 const toNode = (m) =>
@@ -21,9 +23,9 @@ export default function remarkPlaceholders() {
         node.value = node.value.replace(RE, (m, k) => known(m, k, text));
         return;
       }
-      if (node.type === 'link' && RE.test(node.url)) {
-        RE.lastIndex = 0;
-        node.url = node.url.replace(RE, (m, k) => known(m, k, text));
+      if (node.type === 'link') {
+        // Root-relative links need the base path the site is served under.
+        node.url = url(node.url.replace(RE, (m, k) => known(m, k, text)));
         return;
       }
       if (node.type !== 'text' || !parent || !RE.test(node.value)) return;
