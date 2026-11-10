@@ -17,7 +17,16 @@ console.log('\nLiteral placeholders in the copy:');
 const re = /\[([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ _]{2,})\]/g;
 for (const f of walk('src')) {
   if (f.includes('lib/ph.ts') || f.endsWith('site.config.ts')) continue;
+  // In Markdown, [TEXT](url) is a link and code shows literal text: skip both.
+  const md = f.endsWith('.md') || f.endsWith('.mdx');
+  let fence = false;
   readFileSync(f, 'utf8').split('\n').forEach((line, i) => {
-    for (const m of line.matchAll(re)) console.log(`  ${f}:${i + 1}  ${m[0]}`);
+    if (md && /^\s*(```|~~~)/.test(line)) fence = !fence;
+    if (md && fence) return;
+    const prose = md ? line.replace(/`[^`]*`/g, '') : line;
+    for (const m of prose.matchAll(re)) {
+      if (md && prose[m.index! + m[0].length] === '(') continue;
+      console.log(`  ${f}:${i + 1}  ${m[0]}`);
+    }
   });
 }

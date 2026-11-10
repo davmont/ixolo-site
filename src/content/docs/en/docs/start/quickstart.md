@@ -43,16 +43,27 @@ qemu-system-x86_64 -enable-kvm -cpu host -m 2G -smp 2 \
 ```
 
 :::caution[The CPU model matters]
-{{name}} on amd64 needs the `FSGSBASE` CPU feature for thread-local storage.
-`-cpu host` (with KVM) passes it through. Without KVM use `-cpu max`.
-Older models such as `-cpu kvm64` or `qemu64` lack it, and the kernel stops
-early in boot without a message.
+{{name}} on amd64 needs the `FSGSBASE` CPU feature: the C library sets up
+thread-local storage with the `WRFSBASE` instruction. `-cpu host` (with KVM)
+passes it through. Without KVM, use `-cpu max`, or name it explicitly with
+`-cpu qemu64,+fsgsbase`. QEMU's older default models (`qemu64`, `kvm64`) lack
+it, and the kernel panics early in boot with a message asking for `-cpu host`.
 :::
+
+The boot menu waits 10 seconds and then starts the first entry,
+**Regular MINIX 3**. The tree still uses the upstream name in its menus and
+messages.
 
 ### Boot with UEFI instead of BIOS
 
-The ISO is hybrid: the same image boots on UEFI firmware. Point QEMU at an
-OVMF image (the path depends on your distribution):
+The ISO is hybrid: the same image boots on UEFI firmware, through GRUB. Point
+QEMU at an OVMF firmware image. The path depends on your distribution:
+
+| Distribution | OVMF image |
+|---|---|
+| Debian / Ubuntu | `/usr/share/OVMF/OVMF_CODE.fd` (`OVMF_CODE_4M.fd` on newer releases) |
+| Fedora | `/usr/share/edk2/ovmf/OVMF_CODE.fd` |
+| openSUSE | `/usr/share/qemu/ovmf-x86_64.bin` |
 
 ```sh
 qemu-system-x86_64 -enable-kvm -cpu host -m 2G -smp 2 \
@@ -60,19 +71,17 @@ qemu-system-x86_64 -enable-kvm -cpu host -m 2G -smp 2 \
   -cdrom {{iso}}
 ```
 
-### Try the desktop (experimental)
-
-The Wayland desktop needs the UEFI framebuffer, so boot with OVMF as above
-and, once logged in, run:
-
-```sh
-startlxqt
-```
+Under UEFI the console is drawn on the firmware's framebuffer instead of VGA
+text mode.
 
 ### No graphics: serial console
 
-To run the guest in your terminal, add `-nographic`. The ISO starts a login on
-the first serial port as well as on the screen.
+To use the guest from your terminal, add `-nographic`. A login runs on the
+first serial port (`tty00`) as well as on the screen, so a `login:` prompt
+appears in your terminal once the system is up. Under BIOS you will not see the
+boot menu or the kernel messages there; to get them on the serial port too,
+pick the **serial console** entry in the menu (it adds `console=tty00` to the
+kernel command line). Press `Ctrl-a x` to quit QEMU.
 
 ## 4. Log in
 
@@ -84,22 +93,35 @@ login: root
 # uname -a
 ```
 
+`uname` reports `Minix 3.4.0`: the version string has not been changed yet.
+
 ## 5. See it heal
 
-Every driver is an ordinary process. Kill the network driver and watch the
-Reincarnation Server bring it back:
+Every driver is an ordinary process. QEMU's default network card is an Intel
+82540EM, so the system started the `e1000` driver for it. Kill it and watch
+the Reincarnation Server (RS) bring it back:
 
 ```sh
-ps -ax | grep e1000      # QEMU's default network card
+ps -ax | grep e1000      # note the PID
 kill -9 <pid>
-ps -ax | grep e1000      # new PID: it was restarted
+ps -ax | grep e1000      # a new PID: RS restarted it
 ```
 
-The [break-a-driver lab](/en/docs/learn/lab-break-a-driver/) explains what
+The network interface (`em0`) survives the restart: the TCP/IP server
+reattaches to the new driver process and keeps its configuration. The
+[break-a-driver lab](/en/docs/learn/lab-break-a-driver/) explains what
 happened, step by step.
+
+## About the desktop
+
+The experimental LXQt desktop is built separately from the rest of the
+system, and only images built with `MKDESKTOP=yes` carry it: the development
+snapshots from CI do not. On an image that has it, boot with UEFI (see above),
+log in and run `startlxqt`. See
+[The desktop](/en/docs/admin/desktop/) for its state and how to build it.
 
 ## Next steps
 
 - [Install to disk](/en/docs/start/install/)
-- [The shell and pkgsrc packages](/en/docs/start/shell-packages/)
+- [The shell and software](/en/docs/start/shell-packages/)
 - [The architecture in four layers](/en/docs/learn/architecture/)

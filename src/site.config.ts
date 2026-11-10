@@ -47,24 +47,29 @@ export const site = {
     hardware: null as string | null,
   },
 
-  /** Other architectures: status shown on the Download page. */
-  arch: {
-    i386: { status: 'maintenance' as const },
-    arm: { status: null as string | null, boards: null as string | null },
-  },
-
   /**
    * Facts quoted on the pages, with how they were measured, so they can be
    * re-checked before each release.
    */
   facts: {
     /** Non-blank, non-comment lines of minix/kernel incl. arch/x86_64,
-     *  excluding i386/earm.  Measured 2026-10-05 on devel. */
+     *  excluding i386/earm (.c .h .S).  15 476 on devel 326a1d6f08,
+     *  2026-11-10.  Rounded down on purpose: the pages say "about". */
     kernelLines: '15\u202F000', // narrow no-break space: valid in EN and ES
-    /** pjdfstest pass rate in CI (PR #406, 2026-10-05). */
-    pjdfstest: '90.8%',
+    /** pjdfstest: 229 passed, 0 unexpected failures, of 238 scripts
+     *  (PR #408, 2026-10-05; unchanged through PR #488). */
+    pjdfstestPassed: '229',
+    pjdfstestTotal: '238',
+    /** Open POSIX Test Suite (LTP 20250130), KVM, 2 CPUs: 1645 passed,
+     *  0 unexpected failures (PR #488, 2026-11-10).  Run by hand, not in CI. */
+    posixPassed: '1645',
+    posixTotal: '1757',
+    /** In-tree LLVM/clang/lld 22.1.7 (external/apache2/llvm/Makefile.inc). */
     llvm: '22',
+    /** CONFIG_MAX_CPUS in minix/kernel/Makefile.  Tested on 1, 2, 4, 8. */
     maxCpus: '32',
+    /** OpenSSH version shipped in base (PR #446). */
+    openssh: '10.6',
   },
 } as const;
 

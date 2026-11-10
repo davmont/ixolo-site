@@ -23,6 +23,9 @@ const DOCS = {
   xattr: ['minix/fs/mfs/XATTR_DESIGN.md', 5],
   'uefi-boot': ['docs/UEFI_BOOT.md', 6],
   wayland: ['docs/WAYLAND.md', 7],
+  'desktop-build': ['releasetools/DESKTOP.md', 8],
+  'third-party': ['docs/THIRD_PARTY.md', 9],
+  devtools: ['releasetools/devtools/README.md', 10],
 };
 
 const blob = (p) => `https://github.com/${REPO}/blob/${BRANCH}/${p}`;
