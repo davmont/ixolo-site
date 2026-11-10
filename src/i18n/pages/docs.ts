@@ -9,7 +9,8 @@ export const groups: Group[] = [
     items: [
       ['start/quickstart', 'From zero to login in 15 minutes', 'De cero a login en 15 minutos'],
       ['start/install', 'Install to disk', 'Instalar en disco'],
-      ['start/shell-packages', 'The shell and pkgsrc packages', 'La shell y los paquetes pkgsrc'],
+      ['start/shell-packages', 'The shell and software', 'La shell y el software'],
+      ['start/faq', 'Frequently asked questions', 'Preguntas frecuentes'],
     ],
   },
   {
@@ -18,6 +19,7 @@ export const groups: Group[] = [
       ['admin/services', 'Services and the Reincarnation Server', 'Servicios y el Reincarnation Server'],
       ['admin/filesystems', 'File systems: MFS v4, ext4, FAT, exFAT', 'Sistemas de ficheros: MFS v4, ext4, FAT, exFAT'],
       ['admin/network', 'Networking', 'Red'],
+      ['admin/security', 'Security', 'Seguridad'],
       ['admin/desktop', 'Wayland desktop (experimental)', 'Escritorio Wayland (experimental)'],
     ],
   },
@@ -26,7 +28,9 @@ export const groups: Group[] = [
     items: [
       ['learn/architecture', 'The architecture in four layers', 'La arquitectura en cuatro capas'],
       ['learn/message-passing', 'Message passing', 'Paso de mensajes'],
+      ['learn/reliability', 'Isolation and self-repair', 'Aislamiento y autorreparación'],
       ['learn/lab-break-a-driver', 'Lab: break a driver', 'Laboratorio: rompe un driver'],
+      ['learn/history', 'History', 'Historia'],
       ['learn/teachers', 'Guide for teachers', 'Guía para docentes'],
     ],
   },
@@ -46,6 +50,7 @@ export const groups: Group[] = [
       ['reference/syscalls', 'System calls', 'Llamadas al sistema'],
       ['reference/posix', 'POSIX compatibility', 'Compatibilidad POSIX'],
       ['reference/release-notes', 'Release notes', 'Notas de versión'],
+      ['reference/further-reading', 'Further reading', 'Para saber más'],
     ],
   },
 ];
@@ -58,7 +63,10 @@ export const designDocs: [slug: string, file: string, en: [string, string], es: 
   ['design/reclaim', 'RECLAIM_DESIGN.md', ['Memory reclaim', 'Reclaim, compression and disk swap in the memory manager.'], ['Recuperación de memoria', 'Reclaim, compresión y swap a disco en el gestor de memoria.']],
   ['design/xattr', 'XATTR_DESIGN.md', ['Extended attributes', 'xattrs and access control lists.'], ['Atributos extendidos', 'xattr y listas de control de acceso.']],
   ['design/uefi-boot', 'UEFI_BOOT.md', ['UEFI boot', 'The hybrid BIOS + UEFI CD image.'], ['Arranque UEFI', 'La imagen de CD híbrida BIOS + UEFI.']],
-  ['design/wayland', 'WAYLAND.md', ['Wayland', 'The Wayland stack and the wlcompd compositor.'], ['Wayland', 'La pila Wayland y el compositor wlcompd.']],
+  ['design/wayland', 'WAYLAND.md', ['Wayland', 'Feasibility study and roadmap that led to the wlcompd compositor.'], ['Wayland', 'Estudio de viabilidad y hoja de ruta que llevaron al compositor wlcompd.']],
+  ['design/desktop-build', 'DESKTOP.md', ['Building the desktop', 'How the LXQt and Qt 6 desktop is built and laid over an image.'], ['Compilar el escritorio', 'Cómo se compila el escritorio LXQt y Qt 6 y se añade a una imagen.']],
+  ['design/third-party', 'THIRD_PARTY.md', ['Third-party software', 'What is vendored, at which version, and how it is upgraded.'], ['Software de terceros', 'Qué se incluye, en qué versión y cómo se actualiza.']],
+  ['design/devtools', 'devtools/README.md', ['QEMU developer tools', 'Scripts to boot, drive, stress and debug test images.'], ['Herramientas para QEMU', 'Scripts para arrancar, manejar, estresar y depurar imágenes de prueba.']],
 ];
 
 export const hub = {

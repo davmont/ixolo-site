@@ -1,7 +1,7 @@
 ---
 import Page from '../../../layouts/Page.astro';
 import { doc } from '../../../i18n/ui';
-import { fmt } from '../../../lib/ph';
+import { fmt, fmtText } from '../../../lib/ph';
 import type { Lang } from '../../../site.config';
 import { groups, designDocs, hub } from '../../../i18n/pages/docs';
 import { getCollection } from 'astro:content';
@@ -33,7 +33,7 @@ const isStub = (slug: string) =>
           <ul>
             {g.items.map(([slug, en, es]) => (
               <li>
-                <a href={doc(lang, slug)}>{lang === 'es' ? es : en}</a>
+                <a href={doc(lang, slug)}>{fmtText(lang === 'es' ? es : en)}</a>
                 {isStub(slug) && <span class="draft">{c.draft}</span>}
               </li>
             ))}

@@ -21,7 +21,7 @@ export const ui = {
     },
     legal:
       '{name} is derived from MINIX 3 and distributed under the MINIX 3 licence (BSD-style). ' +
-      'It is not affiliated with the Vrije Universiteit or the Stichting MINIX Research Foundation; ' +
+      'It is not affiliated with or endorsed by the Vrije Universiteit Amsterdam or the Stichting MINIX Research Foundation; ' +
       'MINIX and its mascot belong to their respective owners. Maintained by {maintainer}.',
   },
   es: {
@@ -42,7 +42,7 @@ export const ui = {
     },
     legal:
       '{name} es un sistema derivado de MINIX 3 y se distribuye bajo la licencia de MINIX 3 (estilo BSD). ' +
-      'No está afiliado a la Vrije Universiteit ni a la Stichting MINIX Research Foundation; ' +
+      'No está afiliado a la Vrije Universiteit Amsterdam ni a la Stichting MINIX Research Foundation, ni cuenta con su respaldo; ' +
       'MINIX y su mascota pertenecen a sus respectivos titulares. Mantenido por {maintainer}.',
   },
 } as const;

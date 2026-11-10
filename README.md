@@ -19,7 +19,7 @@ npm run sync-docs    # refresh the design documents from devel
 
 | Path | What |
 |---|---|
-| `src/site.config.ts` | **Every value not final yet**: name, version, date, ISO name, checksum, requirements, channels, domain. `null` shows as a yellow `[KEY]` chip. |
+| `src/site.config.ts` | **Every value not final yet**: name, version, date, ISO name, checksum, requirements, channels, domain. `null` shows as a yellow `[KEY]` chip. Also the **measured facts** quoted on the pages (kernel size, test scores, LLVM and OpenSSH versions, max CPUs), each with how and when it was measured: re-check them before a release. |
 | `src/i18n/ui.ts` | Header and footer strings, EN and ES. |
 | `src/i18n/pages/*.ts` | Copy of each page, EN and ES side by side. `{token}` inserts a value from `site.config.ts`. |
 | `src/pages/[lang]/*.astro` | Page layouts: home, download, docs hub, project, community, brand. |
