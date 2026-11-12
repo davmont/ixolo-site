@@ -12,7 +12,7 @@ const group = (label, es, dir) => ({
 });
 
 export default defineConfig({
-  // Absolute URLs (hreflang, sitemap).  GitHub Pages until the domain exists.
+  // Absolute URLs (hreflang, sitemap).
   site: site.domain ? `https://${site.domain}` : 'https://davmont.github.io',
   base: base || '/',
   trailingSlash: 'ignore',
