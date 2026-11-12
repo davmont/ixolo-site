@@ -4,11 +4,11 @@ import Xolo from '../../components/Xolo.astro';
 import { href, doc } from '../../i18n/ui';
 import { fmt, fmtText, text } from '../../lib/ph';
 import copy from '../../i18n/pages/home';
-import type { Lang } from '../../site.config';
+import { released, type Lang } from '../../site.config';
 
 export const getStaticPaths = () => [{ params: { lang: 'en' } }, { params: { lang: 'es' } }];
 const lang = Astro.params.lang as Lang;
-const c = copy[lang];
+const c = released ? copy[lang] : { ...copy[lang], ...copy[lang].pre };
 const qemu = `qemu-system-x86_64 -enable-kvm -cpu host -m 2G -smp 2 \\\n  -cdrom ${text('iso')}`;
 ---
 <Page lang={lang} page="home" title={c.title} description={c.description}>
@@ -92,7 +92,7 @@ const qemu = `qemu-system-x86_64 -enable-kvm -cpu host -m 2G -smp 2 \\\n  -cdrom
       <div class="card release">
         <p class="mono" set:html={fmt(c.relMeta)} />
         <h3 class="h3" set:html={fmt(c.relH3)} />
-        <ul>{c.relItems.map((i) => <li>{i}</li>)}</ul>
+        <ul>{c.relItems.map((i) => <li set:html={fmt(i)} />)}</ul>
         <a href={doc(lang, 'reference/release-notes')} class="more">{c.relMore}</a>
       </div>
     </div>

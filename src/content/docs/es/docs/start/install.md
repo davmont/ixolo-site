@@ -29,15 +29,15 @@ sistema instalado.
 | | Mínimo | Notas |
 |---|---|---|
 | CPU | x86-64 con `FSGSBASE` | Intel desde Ivy Bridge (2012); AMD Zen y posteriores. En Linux: `grep -o fsgsbase /proc/cpuinfo`. Se aprovechan NX, SMEP, SMAP y PCID si existen. Hasta {{maxCpus}} CPU. |
-| RAM | {{ram}} | El escritorio necesita más: {{ramDesktop}}. Se admite RAM por encima de 4 GB. |
+| RAM | {{ram}} | El escritorio necesita más: consulta [Escritorio](/es/docs/admin/desktop/#requisitos). Se admite RAM por encima de 4 GB. |
 | Disco | {{disk}} | Una partición primaria MBR; `setup` comprueba el tamaño que necesita. |
 | Controladora de disco | AHCI (SATA), IDE, NVMe | El ramdisk de arranque elige AHCI o IDE sondeando el PCI. NVMe necesita el modo APIC, que es el de por defecto. `virtio_blk` se compila, pero no se ha probado en amd64. |
 | Tarjeta de red | Familia Intel e1000 | La más probada. Las demás, en [Red](/es/docs/admin/network/). |
 | USB | Solo almacenamiento masivo | Controladoras EHCI, OHCI y xHCI, también detrás de hubs. No hay teclado ni ratón USB: usa PS/2 (o el emulado en una VM). |
 | Firmware | BIOS para un disco instalado; BIOS o UEFI para la ISO | Sin Secure Boot. |
 
-Máquinas físicas verificadas hasta ahora: {{hardware}}. Casi todas las
-pruebas se hacen en QEMU/KVM.
+Casi todas las pruebas se hacen en QEMU/KVM. Si pruebas {{name}} en una
+máquina física, [cuéntanos cómo fue]({{issues}}), arranque o no.
 
 ## Instalar en QEMU
 

@@ -5,7 +5,7 @@ sidebar:
   order: 1
 ---
 
-Esta guía arranca la ISO de {{name}} {{version}} en una máquina virtual QEMU.
+Esta guía arranca la ISO de {{name}} en una máquina virtual QEMU.
 Necesitas un host Linux con unos 2 GB de RAM libres y unos minutos. No se
 instala nada en tu disco: la ISO funciona en modo live.
 
@@ -29,6 +29,17 @@ ls -l /dev/kvm     # debe existir y tu usuario debe poder leerlo
 
 ## 2. Descarga la ISO
 
+::::prerelease
+Aún no hay ninguna versión publicada. Descarga la última instantánea de
+desarrollo como explica la [página de descargas](/es/download/): GitHub la
+sirve comprimida y pide iniciar sesión antes.
+
+```sh
+unzip minix_amd64.iso.zip     # deja {{iso}}
+```
+::::
+
+::::released
 Descarga `{{iso}}` desde la [página de descargas](/es/download/) y
 compruébala:
 
@@ -36,6 +47,7 @@ compruébala:
 sha256sum {{iso}}
 # esperado: {{sha256}}
 ```
+::::
 
 ## 3. Arráncala
 
@@ -60,8 +72,14 @@ mensajes.
 
 ### Arrancar con UEFI en vez de BIOS
 
-La ISO es híbrida: la misma imagen arranca con firmware UEFI, a través de
-GRUB. Indica a QEMU una imagen de firmware OVMF. La ruta depende de tu
+::::prerelease
+La instantánea de desarrollo se genera solo para BIOS. Para UEFI, compila
+la ISO tú mismo (consulta [Compilar desde el código](/es/docs/develop/building/)):
+sale híbrida cuando el host de compilación tiene las herramientas EFI de GRUB.
+::::
+
+La ISO de la versión publicada es híbrida: la misma imagen arranca con
+firmware UEFI, a través de GRUB. Indica a QEMU una imagen de firmware OVMF. La ruta depende de tu
 distribución:
 
 | Distribución | Imagen OVMF |

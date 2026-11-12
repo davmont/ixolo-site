@@ -2,13 +2,21 @@
 import Page from '../../layouts/Page.astro';
 import { doc } from '../../i18n/ui';
 import { fmt, html, text } from '../../lib/ph';
-import { site, type Lang } from '../../site.config';
+import { site, released, type Lang } from '../../site.config';
 import copy from '../../i18n/pages/download';
 
 export const getStaticPaths = () => [{ params: { lang: 'en' } }, { params: { lang: 'es' } }];
 const lang = Astro.params.lang as Lang;
 const c = copy[lang];
+const pre = c.pre;
 const r = site.release;
+const rq = site.requirements;
+const snapshots = `${site.ci}?query=branch%3A${site.repoBranch}+is%3Asuccess`;
+const quickstart = doc(lang, 'start/quickstart');
+// Before the first release amd64 is "in development", not "stable".
+const arch = released ? c.arch : c.arch.map((row, i) => (i === 0 ? [...row.slice(0, 3), pre.amd64Status, row[4]] : row));
+const req = fmt(c.req) + (rq.ramDesktop ? ' ' + fmt(c.reqDesktop) : '');
+const hw = fmt(rq.hardware || released ? c.hw : pre.hwNone);
 const build = `git clone ${site.repo}.git
 cd ixolo
 git checkout ${site.repoBranch}
@@ -21,22 +29,35 @@ OBJ=obj.amd64 CREATE_IMAGE_ONLY=1 IMG=${text('iso')} \\
     <div class="wrap stack" style="--gap:20px">
       <p class="eyebrow">{c.eyebrow}</p>
       <h1 class="h1" set:html={fmt(c.h1)} />
-      <p class="lead" set:html={fmt(c.lead)} />
+      <p class="lead" set:html={fmt(released ? c.lead : pre.lead)} />
     </div>
   </section>
 
   <section class="section tight" style="padding-top:0">
     <div class="wrap">
-      <div class="card iso">
-        <span class="tag">{c.recommended}</span>
-        <h2 class="h2" style="font-size:32px">{c.isoH2}</h2>
-        <p>{c.isoP}</p>
-        <p class="mono sha">{c.sha}: <span set:html={html('sha256')} /></p>
-        <div class="row" style="--gap:14px">
-          <a href={r.isoUrl ?? '#'} class="btn btn-primary" set:html={fmt(c.isoBtn)} />
-          <a href={r.signatureUrl ?? '#'} class="btn btn-ghost">{c.sigBtn}</a>
+      {released ? (
+        <div class="card iso">
+          <span class="tag">{c.recommended}</span>
+          <h2 class="h2" style="font-size:32px">{c.isoH2}</h2>
+          <p>{c.isoP}</p>
+          <p class="mono sha">{c.sha}: <span set:html={html('sha256')} /></p>
+          <div class="row" style="--gap:14px">
+            <a href={r.isoUrl ?? '#'} class="btn btn-primary" set:html={fmt(c.isoBtn)} />
+            <a href={r.signatureUrl ?? '#'} class="btn btn-ghost">{c.sigBtn}</a>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div class="card iso">
+          <span class="tag">{pre.tag}</span>
+          <h2 class="h2" style="font-size:32px">{pre.isoH2}</h2>
+          <p set:html={fmt(pre.isoP)} />
+          <p class="muted" set:html={fmt(pre.steps).replace('{quickstart}', quickstart)} />
+          <div class="row" style="--gap:14px">
+            <a href={snapshots} class="btn btn-primary">{pre.isoBtn}</a>
+            <a href={quickstart} class="btn btn-ghost">{pre.guideBtn}</a>
+          </div>
+        </div>
+      )}
     </div>
   </section>
 
@@ -47,7 +68,7 @@ OBJ=obj.amd64 CREATE_IMAGE_ONLY=1 IMG=${text('iso')} \\
         <table class="data">
           <thead><tr>{c.archHead.map((h) => <th scope="col">{h}</th>)}</tr></thead>
           <tbody>
-            {c.arch.map((row) => (
+            {arch.map((row) => (
               <tr>{row.map((cell, i) => i === 0 ? <th scope="row">{cell}</th> : <td set:html={fmt(cell)} />)}</tr>
             ))}
           </tbody>
@@ -58,23 +79,27 @@ OBJ=obj.amd64 CREATE_IMAGE_ONLY=1 IMG=${text('iso')} \\
 
   <section class="section tight" style="padding-top:0">
     <div class="wrap row">
-      <div class="card" id="requirements"><h3>{c.reqH3}</h3><p set:html={fmt(c.req)} /></div>
-      <div class="card"><h3>{c.hwH3}</h3><p set:html={fmt(c.hw)} /></div>
-      <div class="card">
-        <h3>{c.snapH3}</h3><p>{c.snapP}</p>
-        <a class="more" href={site.ci + '?query=branch%3A' + site.repoBranch}>{c.snapBtn}</a>
-      </div>
+      <div class="card" id="requirements"><h3>{c.reqH3}</h3><p set:html={req} /></div>
+      <div class="card"><h3>{c.hwH3}</h3><p set:html={hw} /></div>
+      {released && (
+        <div class="card">
+          <h3>{c.snapH3}</h3><p>{c.snapP}</p>
+          <a class="more" href={snapshots}>{c.snapBtn}</a>
+        </div>
+      )}
     </div>
   </section>
 
   <section class="section mist">
     <div class="wrap row" style="--gap:32px">
-      <div class="stack" style="flex:1 1 380px; --gap:16px">
-        <h2 class="h2" style="font-size:28px">{c.verifyH2}</h2>
-        <p class="muted">{c.verifyP}</p>
-        <div class="term"><pre>sha256sum {text('iso')}
+      {released && (
+        <div class="stack" style="flex:1 1 380px; --gap:16px">
+          <h2 class="h2" style="font-size:28px">{c.verifyH2}</h2>
+          <p class="muted">{c.verifyP}</p>
+          <div class="term"><pre>sha256sum {text('iso')}
 <span class="dim"># {text('sha256')}</span></pre></div>
-      </div>
+        </div>
+      )}
       <div class="stack" style="flex:1 1 480px; --gap:16px">
         <h2 class="h2" style="font-size:28px">{c.buildH2}</h2>
         <p class="muted">{c.buildP}</p>

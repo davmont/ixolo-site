@@ -57,7 +57,7 @@ the Stichting MINIX Research Foundation.
 ## Does it run on real hardware, or only in virtual machines?
 
 Most testing happens under QEMU/KVM, and that is the recommended way to try it.
-Physical machines verified so far: {{hardware}}. The drivers most likely to
+Reports from physical machines are welcome in [Issues]({{issues}}). The drivers most likely to
 work on a real PC are AHCI, IDE and NVMe storage, Intel e1000 network cards,
 USB mass storage and PS/2 keyboards and mice. There is no USB keyboard
 support, no Wi-Fi and no Secure Boot. The full list is in the

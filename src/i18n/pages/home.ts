@@ -57,6 +57,14 @@ export default {
     xoloH2: 'An axolotl that never gives up.',
     xoloP: 'The axolotl regrows legs, gills and even parts of its heart. That is why {name} carries its name and Xolo is its mascot. Its story comes from Mexica mythology.',
     xoloMore: 'Why we are called this →',
+    // Pre-release mode (no release.version yet).
+    pre: {
+      ctaDownload: 'Try {name}',
+      tryP: 'Download a development snapshot and boot it in QEMU. A few minutes later you are at the login prompt.',
+      relMeta: 'In development · {branch} branch',
+      relH3: 'Coming in the first release',
+      relMore: 'Draft release notes →',
+    },
   },
   es: {
     title: 'el sistema operativo que se regenera',
@@ -115,5 +123,12 @@ export default {
     xoloH2: 'Un ajolote que nunca se rinde.',
     xoloP: 'El ajolote regenera patas, branquias y hasta partes del corazón. Por eso {name} lleva su nombre y Xolo es su mascota. Su historia viene de la mitología mexica.',
     xoloMore: 'Por qué nos llamamos así →',
+    pre: {
+      ctaDownload: 'Prueba {name}',
+      tryP: 'Descarga una instantánea de desarrollo y arráncala en QEMU. En unos minutos estás en el login.',
+      relMeta: 'En desarrollo · rama {branch}',
+      relH3: 'En la primera versión',
+      relMore: 'Borrador de las notas de versión →',
+    },
   },
 };

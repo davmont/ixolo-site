@@ -5,7 +5,7 @@ sidebar:
   order: 1
 ---
 
-This guide boots the {{name}} {{version}} ISO in a QEMU virtual machine. You
+This guide boots the {{name}} ISO in a QEMU virtual machine. You
 need a Linux host with about 2 GB of free RAM and a few minutes. Nothing is
 installed on your disk: the ISO runs live.
 
@@ -28,12 +28,24 @@ ls -l /dev/kvm     # must exist and be readable by your user
 
 ## 2. Download the ISO
 
+::::prerelease
+There is no release yet. Download the latest development snapshot as the
+[download page](/en/download/) explains: GitHub serves it zipped, and asks
+you to sign in first.
+
+```sh
+unzip minix_amd64.iso.zip     # gives {{iso}}
+```
+::::
+
+::::released
 Get `{{iso}}` from the [download page](/en/download/) and check it:
 
 ```sh
 sha256sum {{iso}}
 # expected: {{sha256}}
 ```
+::::
 
 ## 3. Boot it
 
@@ -56,8 +68,14 @@ messages.
 
 ### Boot with UEFI instead of BIOS
 
-The ISO is hybrid: the same image boots on UEFI firmware, through GRUB. Point
-QEMU at an OVMF firmware image. The path depends on your distribution:
+::::prerelease
+The development snapshot is built for BIOS only. For UEFI, build the ISO
+yourself (see [Building from source](/en/docs/develop/building/)): it comes
+out hybrid when the GRUB EFI tools are installed on the build host.
+::::
+
+The release ISO is hybrid: the same image boots on UEFI firmware, through
+GRUB. Point QEMU at an OVMF firmware image. The path depends on your distribution:
 
 | Distribution | OVMF image |
 |---|---|

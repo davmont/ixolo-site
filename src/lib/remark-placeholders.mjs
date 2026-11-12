@@ -2,8 +2,14 @@
 // replaces {{token}} in docs Markdown with values from
 // src/site.config.ts (through src/lib/ph.ts).  In prose an unset token
 // becomes a highlighted placeholder chip; in code it becomes [TOKEN] text.
-import { visit } from 'unist-util-visit';
+//
+// It also keeps or drops two container blocks by release state (see
+// `released` in site.config.ts):
+//   :::prerelease … :::   shown only while there is no release
+//   :::released   … :::   shown only once release.version is set
+import { visit, SKIP } from 'unist-util-visit';
 import { text, html, tokens } from './ph.ts';
+import { released } from '../site.config.ts';
 import { url } from './base.mjs';
 
 // A set value is plain text; only an unset one needs HTML (the chip).
@@ -18,6 +24,12 @@ const known = (m, k, f) => (k in tokens ? f(k) : m);
 
 export default function remarkPlaceholders() {
   return (tree) => {
+    visit(tree, 'containerDirective', (node, index, parent) => {
+      if (node.name !== 'prerelease' && node.name !== 'released') return;
+      const keep = (node.name === 'released') === released;
+      parent.children.splice(index, 1, ...(keep ? node.children : []));
+      return [SKIP, index];
+    });
     visit(tree, (node, index, parent) => {
       if (node.type === 'code' || node.type === 'inlineCode') {
         node.value = node.value.replace(RE, (m, k) => known(m, k, text));

@@ -22,8 +22,9 @@ export const site = {
   ci: 'https://github.com/davmont/ixolo/actions/workflows/ci.yml',
 
   /** Community channels (Comunidad page). */
-  chat: null as string | null,
-  mailingList: null as string | null,
+  discussions: 'https://github.com/davmont/minix/discussions',
+  /** Private reports under the code of conduct (Contributor Covenant 2.1). */
+  conductEmail: 'conduct@ixolo.org',
 
   release: {
     /** e.g. '1.0'.  First official release: with desktop. */
@@ -42,7 +43,10 @@ export const site = {
   requirements: {
     ram: null as string | null,
     ramDesktop: null as string | null,
-    disk: null as string | null,
+    /** setup needs 3 MB + the sets + a 128 MB root: 1 046 MB on the devel
+     *  snapshot of 2026-11-11 (3d1d1d0af1, without on-target clang).  2 GB
+     *  leaves room for the release's larger sets and matches the OS README. */
+    disk: '2 GB' as string | null,
     /** Physical machines verified to boot and run the release. */
     hardware: null as string | null,
   },
@@ -72,6 +76,13 @@ export const site = {
     openssh: '10.6',
   },
 } as const;
+
+/**
+ * Pre-release mode: until `release.version` is set the site shows no release
+ * details (version, date, ISO, checksum) and offers the CI snapshots and the
+ * build from source instead.  Setting the version switches it off.
+ */
+export const released = site.release.version != null;
 
 export type Lang = 'en' | 'es';
 export const languages: Record<Lang, string> = { en: 'English', es: 'Español' };

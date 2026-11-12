@@ -27,15 +27,15 @@ first steps on the installed system.
 | | Minimum | Notes |
 |---|---|---|
 | CPU | x86-64 with `FSGSBASE` | Intel since Ivy Bridge (2012); AMD Zen and newer. On Linux: `grep -o fsgsbase /proc/cpuinfo`. NX, SMEP, SMAP and PCID are used when present. Up to {{maxCpus}} CPUs. |
-| RAM | {{ram}} | The desktop needs more: {{ramDesktop}}. RAM above 4 GB is supported. |
+| RAM | {{ram}} | The desktop needs more: see [Desktop](/en/docs/admin/desktop/#requirements). RAM above 4 GB is supported. |
 | Disk | {{disk}} | One MBR primary partition; `setup` checks the size it needs. |
 | Storage controller | AHCI (SATA), IDE, NVMe | The boot ramdisk picks AHCI or IDE by probing PCI. NVMe needs APIC mode, the default. `virtio_blk` is built but untested on amd64. |
 | Network card | Intel e1000 family | Best tested. See [Networking](/en/docs/admin/network/) for the others. |
 | USB | Mass storage only | EHCI, OHCI and xHCI controllers, also behind hubs. No USB keyboard or mouse: use PS/2 (or the emulated one in a VM). |
 | Firmware | BIOS for an installed disk; BIOS or UEFI for the ISO | No Secure Boot. |
 
-Physical machines verified so far: {{hardware}}. Most testing happens under
-QEMU/KVM.
+Most testing happens under QEMU/KVM. If you try {{name}} on a physical
+machine, please [report how it went]({{issues}}), whether it boots or not.
 
 ## Install in QEMU
 
