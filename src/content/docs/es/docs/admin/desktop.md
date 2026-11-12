@@ -26,7 +26,7 @@ renderiza por software en el framebuffer de UEFI. No hay X11 ni driver de GPU.
                   |
               wlcompd                           compositor y gestor de ventanas
                /     \
-        /dev/fb0      /dev/kbdmux, /dev/mouse   pixman + FreeType
+        /dev/fb0    /dev/kbdmux, /dev/mousemux  pixman + FreeType
            |               |
        driver fb      servidor input <- teclado y ratón PS/2 (pckbd)
            |
@@ -89,9 +89,10 @@ MKDESKTOP=yes UEFI=yes OBJ=obj.amd64 CREATE_IMAGE_ONLY=1 IMG={{iso}} \
 
 El host necesita `meson`, `ninja`, `cmake`, `curl`, `patch`, `pkg-config`,
 `sha256sum` y un Qt del host de exactamente la misma versión (6.11.1),
-indicado con `QT_HOST_PATH`. El manifiesto de fuentes viene con marcadores
-`sha256 = TOFILL`, y el script se niega a compilar hasta que registres las
-sumas con `sh releasetools/build-desktop.sh checksums`. Todos los detalles,
+indicado con `QT_HOST_PATH`. El manifiesto de fuentes fija una suma sha256
+para cada fuente, y el script rechaza las descargas que no coinciden. Cuando
+subas una versión, regenera las sumas con
+`sh releasetools/build-desktop.sh checksums`. Todos los detalles,
 incluido cómo meter el escritorio en los conjuntos de instalación en vez de
 superponerlo a la ISO, están en
 [compilar el escritorio](/es/docs/design/desktop-build/).

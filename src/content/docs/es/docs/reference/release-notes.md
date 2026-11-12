@@ -9,7 +9,7 @@ sidebar:
 
 :::note
 {{name}} aún no ha publicado ninguna versión. Estas notas describen la rama
-`{{branch}}` en noviembre de 2026 (hasta el [PR #488]({{repo}}/pull/488)) y
+`{{branch}}` en noviembre de 2026 (hasta el [PR #491]({{repo}}/pull/491)) y
 serán las notas de la primera versión.
 :::
 
@@ -41,10 +41,12 @@ no lo cubren las pruebas automáticas.
   APIC por defecto ([#286]({{repo}}/pull/286)).
 - Interrupciones MSI-X ([#186]({{repo}}/pull/186)), entropía de RDRAND al
   arrancar ([#240]({{repo}}/pull/240)), calibración robusta del temporizador
-  ([#362]({{repo}}/pull/362), [#363]({{repo}}/pull/363)), reloj de tiempo
-  real con UEFI ([#354]({{repo}}/pull/354)) y arranque con más de 4 GB de
+  ([#362]({{repo}}/pull/362)), arranque en hipervisores con PCID
+  ([#363]({{repo}}/pull/363)), reloj de tiempo real con UEFI ([#354]({{repo}}/pull/354)) y arranque con más de 4 GB de
   RAM ([#484]({{repo}}/pull/484)).
 - La CPU debe tener `FSGSBASE`. NX, SMEP, SMAP y PCID se usan si están.
+- `setup` encuentra los conjuntos de instalación en la ISO de amd64 y se
+  detiene si un conjunto no se extrae ([#489]({{repo}}/pull/489)).
 
 ### Multiprocesador (SMP)
 
@@ -78,6 +80,9 @@ no lo cubren las pruebas automáticas.
   ([#365]({{repo}}/pull/365)–[#367]({{repo}}/pull/367)), proyecciones
   compartidas de escritura de ficheros y `msync` ([#410]({{repo}}/pull/410)),
   memoria anónima compartida tras `fork` ([#487]({{repo}}/pull/487)).
+- Como mucho 65530 proyecciones por proceso de usuario, y un `mmap` con
+  `MAP_FIXED` que no cabe falla con `ENOMEM` en vez de deshacer proyecciones
+  ([#490]({{repo}}/pull/490)).
 - *Experimental:* swap en disco en el núcleo y VM
   ([#299]({{repo}}/pull/299), [#300]({{repo}}/pull/300),
   [#310]({{repo}}/pull/310)). Todavía no hay herramienta `swapon` para
@@ -103,6 +108,9 @@ no lo cubren las pruebas automáticas.
   ([#263]({{repo}}/pull/263), [#264]({{repo}}/pull/264)).
 - tmpfs, que también aloja la memoria compartida POSIX
   ([#483]({{repo}}/pull/483)).
+- MFS pone a cero el final antiguo del último bloque de un fichero cuando
+  este crece, y actualiza la hora de acceso cuando una proyección accede al
+  fichero ([#491]({{repo}}/pull/491)).
 - *Experimental:* MFS multihilo con E/S concurrente
   ([#281]({{repo}}/pull/281)). El sistema de ficheros raíz funciona con un
   solo hilo por defecto ([#282]({{repo}}/pull/282)).
@@ -129,7 +137,8 @@ no lo cubren las pruebas automáticas.
 - Escalado de ventana TCP, SACK y marcas de tiempo
   ([#414]({{repo}}/pull/414)), opciones de multicast como en NetBSD
   ([#429]({{repo}}/pull/429)), `accept4` ([#388]({{repo}}/pull/388)).
-- dhcpcd sustituye a dhclient ([#206]({{repo}}/pull/206)).
+- dhcpcd actualizado de 6.9.3 a 10.3.1 ([#206]({{repo}}/pull/206) y
+  posteriores); se retiraron el cliente y el servidor ISC DHCP.
 
 ### POSIX
 
@@ -230,7 +239,7 @@ no lo cubren las pruebas automáticas.
 | nov. 2018 | Último commit de MINIX original, `4db99f4`: la base del fork |
 | mar. 2026 | Empieza el fork |
 | may. 2026 | amd64 arranca hasta el login (en `master`, [#153]({{repo}}/pull/153)) |
-| jun.–nov. 2026 | Desarrollo en `{{branch}}`, PR [#154]({{repo}}/pull/154) a [#488]({{repo}}/pull/488) |
+| jun.–nov. 2026 | Desarrollo en `{{branch}}`, PR [#154]({{repo}}/pull/154) a [#491]({{repo}}/pull/491) |
 
 El árbol tiene también su propio
 [`RELEASE_NOTES.md`]({{repo}}/blob/{{branch}}/RELEASE_NOTES.md). Solo cubre de

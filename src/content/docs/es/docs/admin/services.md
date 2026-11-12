@@ -107,7 +107,7 @@ ficheros, tocar otros dispositivos ni mandar mensajes al driver de disco.
 
 | Clave | Significado | Por defecto |
 |---|---|---|
-| `uid` | ID de usuario con el que se ejecuta. | `service` (uid 12) |
+| `uid` | ID de usuario con el que se ejecuta. | `service` (uid 999) |
 | `ipc` | Procesos a los que puede enviar mensajes: `ALL`, `ALL_SYS` (sin procesos de usuario), `NONE` o una lista de nombres de programa. `SYSTEM` es el núcleo y `USER`, los procesos de usuario. | `ALL_SYS` |
 | `system` | Llamadas al núcleo permitidas: `ALL`, `BASIC`, `NONE` o una lista. | `BASIC` |
 | `vm` | Llamadas a VM permitidas, con las mismas formas que `system`. | `BASIC` |
@@ -143,8 +143,9 @@ Qué pasa después:
 
 1. La primera salida inesperada se reinicia al momento.
 2. Las salidas repetidas se reinician tras un retardo que se dobla cada vez (2,
-   4, 8, 16 s), hasta 30 s. `-b` quita el retardo; un servicio que se reinicia
-   desde una copia en memoria (`-c`) espera como mucho un segundo.
+   4, 8, 16 s), hasta 30 s. `-b` mantiene el retardo en un segundo en vez de
+   doblarlo; un servicio que se reinicia desde una copia en memoria (`-c`)
+   espera como mucho un segundo.
 3. Si el servicio tiene un script de recuperación (`-script`), RS lo ejecuta en
    su lugar, con la etiqueta, el motivo (`terminated`, `no-heartbeat` o
    `restart`) y el número de reinicios como argumentos. El script decide qué
@@ -212,7 +213,7 @@ Algunos valores por defecto que conviene conocer:
 | Variable | Por defecto | Efecto |
 |---|---|---|
 | `syslogd` | `YES` | Registro del sistema en `/var/log/messages`. |
-| `cron` | `YES` | Tareas periódicas. |
+| `cron` | `YES` | Tareas periódicas. `/usr/etc/rc` arranca cron en cada arranque salvo desde CD; esta variable no se lee. |
 | `inetd` | `YES` | Superservidor de Internet. |
 | `certctl_init` | `YES` | Rellena `/etc/openssl/certs` en el primer arranque. |
 | `sshd` | `NO` | Servidor OpenSSH. Ver [seguridad](/es/docs/admin/security/). |

@@ -75,7 +75,7 @@ For which server implements each call, see the
 
 The known-failure lists are the honest summary. Both are in the tree:
 [`qemutest-posix.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-posix.xfail)
-(78 entries, 12 of them marked flaky) and
+(74 entries, 11 of them marked flaky) and
 [`qemutest-pjdfstest.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-pjdfstest.xfail)
 (8 entries). By category:
 
@@ -100,8 +100,9 @@ The known-failure lists are the honest summary. Both are in the tree:
   some cannot set themselves up, some time out. Many are condition-variable
   and timed-lock tests.
 - *Timing.* The AIO, `clock/1-1`, `sigwait/6-*` and `sched_setparam/27-1`
-  entries are flaky: they depend on what finishes first.
-- *Others.* `killpg/1-2` and four `sched_setparam/25-*` tests do not
+  entries are flaky: they depend on what finishes first. `munmap/1-1` and
+  `pthread_create/14-1` are marked flaky too.
+- *Others.* `killpg/1-2` and three `sched_setparam/25-*` tests do not
   compile; `timer_create/10-1` needs `_SC_CPUTIME`.
 
 **Not measured by either suite**

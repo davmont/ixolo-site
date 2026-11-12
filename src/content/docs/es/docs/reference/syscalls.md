@@ -166,9 +166,12 @@ grants, y el otro lado copia a través de él con `SYS_SAFECOPYFROM` o
 
 **Llamadas solo de x86.** `SYS_DEVIO`, `SYS_VDEVIO`, `SYS_SDEVIO`,
 `SYS_IOPENABLE` y `SYS_READBIOS` existen solo en i386 y amd64, porque
-trabajan con los puertos de E/S de x86 y la zona de la BIOS. En amd64 sus
-manejadores están en
-[`minix/kernel/arch/x86_64/`]({{repo}}/blob/{{branch}}/minix/kernel/arch/x86_64).
+trabajan con los puertos de E/S de x86 y la zona de la BIOS. En amd64 los
+manejadores de `SYS_SDEVIO`, `SYS_IOPENABLE` y `SYS_READBIOS` están en
+[`minix/kernel/arch/x86_64/`]({{repo}}/blob/{{branch}}/minix/kernel/arch/x86_64);
+los de `SYS_DEVIO` y `SYS_VDEVIO` están en
+[`minix/kernel/system/`]({{repo}}/blob/{{branch}}/minix/kernel/system), pero
+solo se compilan para x86.
 
 ### Qué cambió con amd64 y SMP
 

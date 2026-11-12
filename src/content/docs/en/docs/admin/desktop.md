@@ -25,7 +25,7 @@ software into the UEFI framebuffer. There is no X11 and no GPU driver.
                   |
               wlcompd                           compositor and window manager
                /     \
-        /dev/fb0      /dev/kbdmux, /dev/mouse   pixman + FreeType
+        /dev/fb0    /dev/kbdmux, /dev/mousemux  pixman + FreeType
            |               |
        fb driver      input server <- PS/2 keyboard and mouse (pckbd)
            |
@@ -86,11 +86,12 @@ MKDESKTOP=yes UEFI=yes OBJ=obj.amd64 CREATE_IMAGE_ONLY=1 IMG={{iso}} \
 
 The host needs `meson`, `ninja`, `cmake`, `curl`, `patch`, `pkg-config`,
 `sha256sum` and a host Qt of exactly the same version (6.11.1), pointed to by
-`QT_HOST_PATH`. The manifest of sources ships with `sha256 = TOFILL`
-placeholders, and the script refuses to build until you record the checksums
-with `sh releasetools/build-desktop.sh checksums`. All the details, including
-how to put the desktop in the installation sets instead of overlaying the ISO,
-are in [building the desktop](/en/docs/design/desktop-build/).
+`QT_HOST_PATH`. The manifest of sources pins a sha256 for every source, and
+the script refuses a download that does not match. When you bump a version,
+regenerate the checksums with `sh releasetools/build-desktop.sh checksums`.
+All the details, including how to put the desktop in the installation sets
+instead of overlaying the ISO, are in
+[building the desktop](/en/docs/design/desktop-build/).
 
 :::caution[Relink after PR #488]
 [PR #488]({{repo}}/pull/488) changed how libc and libpthread connect

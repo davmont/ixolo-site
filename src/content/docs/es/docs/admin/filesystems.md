@@ -188,8 +188,9 @@ resto de la cadena se pasa al servidor.
 
 El servidor `ext2` lee y escribe volúmenes Linux ext2, ext3 y ext4, con
 extents, números de bloque de 64 bits, sumas `metadata_csum`, directorios
-htree, ficheros de más de 2 GB, atributos extendidos y ACL. Procesa la lista
-de huérfanos al montar.
+con índice htree (se leen como directorios lineales; el índice se descarta
+cuando el servidor modifica uno), ficheros de más de 2 GB, atributos
+extendidos y ACL. Procesa la lista de huérfanos al montar.
 
 Lo que no hace:
 

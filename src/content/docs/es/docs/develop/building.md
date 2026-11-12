@@ -17,10 +17,11 @@ página y `ci.yml` no coinciden, manda `ci.yml`.
 
 ## Requisitos del host
 
-- **Linux en x86-64.** La CI usa Ubuntu 24.04 e instala solo esto:
+- **Linux en x86-64.** La CI usa Ubuntu 24.04 e instala solo esto (también
+  necesitas `git` para clonar el árbol):
 
   ```sh
-  sudo apt install build-essential clang zlib1g-dev python3 git
+  sudo apt install build-essential clang zlib1g-dev python3
   ```
 
 - **Herramientas EFI de GRUB, para una ISO híbrida BIOS + UEFI.** Sin ellas,
@@ -100,8 +101,8 @@ sh build.sh -m amd64 -U -u -j$(nproc) -O obj.amd64 -V MKLLVMCMDS=no \
 
 Solo afecta al núcleo
 ([`Makefile.inc`]({{repo}}/blob/{{branch}}/minix/kernel/arch/x86_64/Makefile.inc)).
-Los niveles superiores (v3, v4) se rechazan a propósito: necesitan AVX, que el
-núcleo no usa.
+Solo se reconoce `x86-64-v2`; otros valores (v3, v4) se ignoran sin avisar, a
+propósito: necesitan AVX, que el núcleo no usa.
 
 ## Genera la ISO
 

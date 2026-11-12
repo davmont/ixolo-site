@@ -16,10 +16,11 @@ page and `ci.yml` disagree, `ci.yml` is right.
 
 ## Host requirements
 
-- **Linux on x86-64.** The CI uses Ubuntu 24.04 and installs only this:
+- **Linux on x86-64.** The CI uses Ubuntu 24.04 and installs only this (you
+  also need `git` to clone the tree):
 
   ```sh
-  sudo apt install build-essential clang zlib1g-dev python3 git
+  sudo apt install build-essential clang zlib1g-dev python3
   ```
 
 - **GRUB EFI tools, for a hybrid BIOS + UEFI ISO.** Without them the image
@@ -97,8 +98,8 @@ sh build.sh -m amd64 -U -u -j$(nproc) -O obj.amd64 -V MKLLVMCMDS=no \
 
 It only affects the kernel
 ([`Makefile.inc`]({{repo}}/blob/{{branch}}/minix/kernel/arch/x86_64/Makefile.inc)).
-Higher levels (v3, v4) are refused on purpose: they need AVX, which the kernel
-does not use.
+Only `x86-64-v2` is recognised; other values (v3, v4) are silently ignored, on
+purpose: they need AVX, which the kernel does not use.
 
 ## Make the ISO
 

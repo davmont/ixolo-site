@@ -9,7 +9,7 @@ sidebar:
 
 :::note
 {{name}} has not had a release yet. These notes describe the `{{branch}}`
-branch as of November 2026 (up to [PR #488]({{repo}}/pull/488)) and will
+branch as of November 2026 (up to [PR #491]({{repo}}/pull/491)) and will
 become the notes of the first release.
 :::
 
@@ -40,11 +40,13 @@ by the automated tests.
   default ([#286]({{repo}}/pull/286)).
 - MSI-X interrupts ([#186]({{repo}}/pull/186)), RDRAND entropy at boot
   ([#240]({{repo}}/pull/240)), robust timer calibration
-  ([#362]({{repo}}/pull/362), [#363]({{repo}}/pull/363)), the real-time
-  clock under UEFI ([#354]({{repo}}/pull/354)), and boot with more than 4 GB
+  ([#362]({{repo}}/pull/362)), boot on PCID-capable hypervisors
+  ([#363]({{repo}}/pull/363)), the real-time clock under UEFI ([#354]({{repo}}/pull/354)), and boot with more than 4 GB
   of RAM ([#484]({{repo}}/pull/484)).
 - The CPU must support `FSGSBASE`. NX, SMEP, SMAP and PCID are used when
   present.
+- `setup` finds the installation sets on the amd64 ISO and stops if a set
+  fails to extract ([#489]({{repo}}/pull/489)).
 
 ### Multiprocessor (SMP)
 
@@ -76,6 +78,9 @@ by the automated tests.
   ([#365]({{repo}}/pull/365)–[#367]({{repo}}/pull/367)), writable shared file
   mappings and `msync` ([#410]({{repo}}/pull/410)), shared anonymous memory
   across `fork` ([#487]({{repo}}/pull/487)).
+- At most 65530 mappings per user process, and a `MAP_FIXED` `mmap` that
+  does not fit fails with `ENOMEM` instead of unmapping
+  ([#490]({{repo}}/pull/490)).
 - *Experimental:* disk swap in the kernel and VM
   ([#299]({{repo}}/pull/299), [#300]({{repo}}/pull/300),
   [#310]({{repo}}/pull/310)). There is no `swapon` tool to turn it on yet.
@@ -96,6 +101,9 @@ by the automated tests.
   [#218]({{repo}}/pull/218), [#265]({{repo}}/pull/265)) and exFAT
   ([#263]({{repo}}/pull/263), [#264]({{repo}}/pull/264)).
 - tmpfs, which also holds POSIX shared memory ([#483]({{repo}}/pull/483)).
+- MFS zeroes the old tail of a file's last block when the file grows, and
+  updates the access time when a mapping references the file
+  ([#491]({{repo}}/pull/491)).
 - *Experimental:* multithreaded MFS with concurrent I/O
   ([#281]({{repo}}/pull/281)). The root file system runs single-threaded by
   default ([#282]({{repo}}/pull/282)).
@@ -119,7 +127,8 @@ by the automated tests.
 - TCP window scaling, SACK and timestamps ([#414]({{repo}}/pull/414)),
   multicast options as on NetBSD ([#429]({{repo}}/pull/429)), `accept4`
   ([#388]({{repo}}/pull/388)).
-- dhcpcd replaces dhclient ([#206]({{repo}}/pull/206)).
+- dhcpcd updated from 6.9.3 to 10.3.1 ([#206]({{repo}}/pull/206) and
+  later); the ISC DHCP client and server were removed.
 
 ### POSIX
 
@@ -213,7 +222,7 @@ by the automated tests.
 | Nov 2018 | Last upstream commit, `4db99f4`: the base of the fork |
 | Mar 2026 | The fork starts |
 | May 2026 | amd64 boots to a login prompt (on `master`, [#153]({{repo}}/pull/153)) |
-| Jun–Nov 2026 | Development on `{{branch}}`, PRs [#154]({{repo}}/pull/154) to [#488]({{repo}}/pull/488) |
+| Jun–Nov 2026 | Development on `{{branch}}`, PRs [#154]({{repo}}/pull/154) to [#491]({{repo}}/pull/491) |
 
 The tree also has its own
 [`RELEASE_NOTES.md`]({{repo}}/blob/{{branch}}/RELEASE_NOTES.md). It covers

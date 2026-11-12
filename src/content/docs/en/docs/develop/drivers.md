@@ -136,7 +136,7 @@ The keys you will use most:
 | `irq` | Interrupt lines | none |
 | `pci device` | PCI devices it may claim, `vendor:device` | none |
 | `pci class` | PCI classes it may claim, `class/subclass/interface` | none |
-| `uid` | User ID it runs as | 12 (`service`) |
+| `uid` | User ID it runs as | 999 (`service`) |
 
 A real PCI driver needs fewer lines than you might expect, because claiming a
 PCI device also grants its I/O ports, memory ranges and interrupt line (see
@@ -337,9 +337,11 @@ entry = nvme_msix_table + nvme_msix_toff;            /* table entry 0 */
 *(volatile u32_t *)(entry + MSIX_VEC_CTRL) = 0;      /* unmask */
 ```
 
-The call returns `ENOSYS` when the kernel runs without the APIC, so keep a
-fallback: NVMe falls back to polling. Vectors come from a small pool (32), so
-use one per device where you can.
+The call can fail: `EINVAL` when the kernel runs with the APIC disabled,
+`ENOSPC` when the vector pool is exhausted, `ENOSYS` on a kernel built without
+APIC support. NVMe falls back to polling only when the device has no usable
+MSI-X; if `sys_irqsetpolicy_msi()` itself fails, NVMe init fails. Vectors come
+from a small pool (32), so use one per device where you can.
 
 ### DMA and physical memory
 
@@ -369,11 +371,12 @@ process does not inherit anything from the old one. Design for that:
   default answers RS with `ERESTART` and the driver is started again as if
   fresh, which is a reasonable choice for many drivers.
 - **Keep what must survive outside the process.** The data store server (DS)
-  holds small named values. `hello` saves its open counter with
-  `ds_publish_u32("open_counter", open_counter, DSF_OVERWRITE)` and reads it
-  back with `ds_retrieve_u32()`. A driver that wants state across a crash has
-  to publish it as it goes, because it gets no chance to save anything when
-  it dies.
+  holds small named values. `hello` uses DS only for live update: it saves
+  its open counter with
+  `ds_publish_u32("open_counter", open_counter, DSF_OVERWRITE)` before the
+  update and reads it back with `ds_retrieve_u32()`; after a restart it resets
+  the counter to 0. A driver that wants state across a crash has to publish it
+  as it goes, because it gets no chance to save anything when it dies.
 - **Announce again.** Calling `chardriver_announce()` or
   `blockdriver_announce()` from init tells VFS the driver's new endpoint, so
   requests reach the new copy.

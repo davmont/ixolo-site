@@ -89,8 +89,8 @@ A partir de ahí, RS arranca todo lo demás a petición de los scripts de inicio
    arranca `acpi`, `pci`, `input`, `pckbd`, el driver de disco que encuentre
    (`nvme`, `ahci`, `virtio_blk` o `at_wini`) y `procfs`, y monta la raíz real.
 2. [`/etc/rc.minix`]({{repo}}/blob/{{branch}}/etc/rc.minix) arranca `is`
-   (volcados de depuración), `random`, `readclock.drv`, `usbd` y `devmand`, y
-   monta un `tmpfs` en `/var/shm`.
+   (volcados de depuración), `random`, `readclock.drv` y `usbd`, y monta un
+   `tmpfs` en `/var/shm`.
 3. [`/usr/etc/rc`]({{repo}}/blob/{{branch}}/etc/usr/rc) arranca un driver de
    red por cada tarjeta que encuentra en el bus PCI y después `pty`, `lwip`,
    `uds`, `ipc` y `log`.
@@ -145,9 +145,9 @@ monolítico, así que el paso de mensajes tiene que ser rápido. En amd64,
 - una **vía rápida** para `sendrec` cuando el receptor ya está esperando: el
   núcleo copia el mensaje y, si ambos están en la misma CPU, salta
   directamente al receptor sin pasar por la cola de ejecución;
-- la **colocación de servidores**: SCHED cuenta desde qué CPU llegan las
-  peticiones de cada servidor y lo traslada a esa CPU cuando una sola envía
-  la mayoría (VFS, VM, RS y el propio SCHED no se mueven).
+- la **colocación de servidores**: el núcleo cuenta desde qué CPU llegan las
+  peticiones de cada servidor, y SCHED lo traslada a esa CPU cuando una sola
+  envía la mayoría (VFS, VM, RS y el propio SCHED no se mueven).
 
 Medidas al integrarlas, con cuatro CPUs (`-smp 4`), las dos juntas bajaron la
 mediana del tiempo de ida y vuelta de unos 78 300 a 16 100 ciclos de CPU:

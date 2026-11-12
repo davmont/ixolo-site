@@ -167,7 +167,8 @@ Check `/proc/service/e1000_0` again: `restarts` has gone up.
 Repeat it four or five times in a row and time how long the driver takes to
 come back. RS waits longer after each failure (2, 4, 8, 16 seconds, at most
 30) so that a driver that crashes on every start cannot keep the machine busy.
-While it waits, the entry may be missing from `/proc/service`.
+While it waits, the entry is still listed, but its `pid` belongs to the dead
+process.
 
 ## 5. A disk driver
 

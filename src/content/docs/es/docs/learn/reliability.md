@@ -17,8 +17,9 @@ la recuperación.
 ## Mínimo privilegio
 
 Cada servicio del sistema funciona con el conjunto de derechos más pequeño
-que necesita. RS lee esos derechos de `/etc/system.conf` y de los ficheros de
-`/etc/system.conf.d/` al arrancar el servicio, y se los comunica al núcleo.
+que necesita. `minix-service` lee esos derechos de `/etc/system.conf` y de los
+ficheros de `/etc/system.conf.d/` al arrancar el servicio y se los pasa a RS,
+que se los comunica al núcleo.
 Esta es la entrada real del driver de red de Intel,
 [`minix/drivers/net/e1000/e1000.conf`]({{repo}}/blob/{{branch}}/minix/drivers/net/e1000/e1000.conf),
 resumida:
@@ -45,7 +46,7 @@ Cada sección es un tipo de permiso:
 
 | Palabra clave | Qué limita | Quién lo hace cumplir |
 |---|---|---|
-| `system` | Qué llamadas al núcleo puede hacer el servicio. El driver e1000 puede traducir direcciones (`UMAP`), gestionar su interrupción (`IRQCTL`) y hacer E/S por puertos (`DEVIO`), y nada más: no puede, por ejemplo, crear procesos ni cambiar tablas de páginas. | núcleo |
+| `system` | Qué llamadas al núcleo puede hacer el servicio. El driver e1000 puede traducir direcciones (`UMAP`), gestionar su interrupción (`IRQCTL`) y hacer E/S por puertos (`DEVIO`), y, aparte de las llamadas básicas que recibe todo servicio (copias seguras, temporizadores, salida), nada más: no puede, por ejemplo, crear procesos ni cambiar tablas de páginas. | núcleo |
 | `ipc` | A qué procesos puede enviar mensajes. El driver puede hablar con la pila de red, pero no con VFS ni con un driver de disco. | núcleo |
 | `io`, `irq` | Qué rangos de puertos de E/S y qué líneas de interrupción puede usar (para dispositivos tipo ISA; `at_wini` declara `1f0:8`, la IRQ 14, etc.). | núcleo |
 | `pci device`, `pci class` | Qué dispositivos PCI puede reclamar. Su memoria y su interrupción se conceden a partir de ahí. | driver PCI |
@@ -87,9 +88,11 @@ shell. Todas las opciones están en
 
 RS vigila dos tipos de fallo:
 
-- **Caídas.** Cuando un servicio muere (un fallo de segmentación, un
-  `panic()`, un `SIGKILL`), el núcleo entrega la señal a RS en lugar de a PM.
-  RS marca el servicio como terminado y empieza la recuperación.
+- **Caídas.** Cuando un servicio muere por un fallo (un fallo de
+  segmentación) o por una señal como `SIGKILL`, el núcleo entrega la señal a
+  RS en lugar de a PM. Un servicio que llama a `panic()` termina, y RS ve
+  morir a su hijo. En ambos casos, RS marca el servicio como terminado y
+  empieza la recuperación.
 - **Bloqueos.** Si el servicio tiene un periodo, RS le envía una notificación
   en cada periodo. La biblioteca del servicio responde automáticamente desde
   su bucle de mensajes. Si pasado el doble del periodo no ha llegado
@@ -110,14 +113,16 @@ La lógica está en `terminate_service()` y `restart_service()`, en
 2. Si no, la primera vez RS lo reinicia en el acto desde el mismo binario (o
    desde la copia en memoria).
 3. Si el servicio ya había fallado antes, RS espera primero: 2 segundos tras
-   el segundo fallo, luego 4, 8, 16, y como mucho 30. Esta **espera
-   exponencial binaria** impide que un driver que falla en cada arranque se
-   coma la máquina. `minix-service up -b` la desactiva.
+   el segundo fallo, luego 4, 8, 16, y como mucho 30 (los servicios arrancados
+   con `-c`, como los drivers de disco, esperan como mucho 1 segundo). Esta
+   **espera exponencial binaria** impide que un driver que falla en cada
+   arranque se coma la máquina. `minix-service up -b` la desactiva.
 4. Si el servicio falla mientras todavía se está inicializando, RS se rinde y
    lo deja parado. El resto del sistema sigue funcionando sin él.
 
-Cuando la copia nueva está en marcha, RS publica su endpoint en DS, el
-almacén de datos. Los servidores que dependen de drivers están suscritos a
+Cuando la copia nueva está en marcha, RS publica su etiqueta y su endpoint en
+DS, el almacén de datos, y el driver se anuncia en `drv.blk.<etiqueta>`,
+`drv.chr.<etiqueta>` o `drv.net.<etiqueta>`. Los servidores que dependen de drivers están suscritos a
 esas entradas: VFS vigila `drv.blk.*` y `drv.chr.*`, la pila de red vigila
 `drv.net.*`. DS les avisa de que el driver tiene un endpoint nuevo y ellos
 reenvían lo que estuviera en curso.

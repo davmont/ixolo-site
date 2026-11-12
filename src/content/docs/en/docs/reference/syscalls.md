@@ -163,8 +163,12 @@ privileged services.
 
 **x86-only calls.** `SYS_DEVIO`, `SYS_VDEVIO`, `SYS_SDEVIO`, `SYS_IOPENABLE`
 and `SYS_READBIOS` exist only on i386 and amd64, because they deal with x86
-I/O ports and the BIOS area. On amd64 their handlers live in
-[`minix/kernel/arch/x86_64/`]({{repo}}/blob/{{branch}}/minix/kernel/arch/x86_64).
+I/O ports and the BIOS area. On amd64 the handlers of `SYS_SDEVIO`,
+`SYS_IOPENABLE` and `SYS_READBIOS` live in
+[`minix/kernel/arch/x86_64/`]({{repo}}/blob/{{branch}}/minix/kernel/arch/x86_64);
+those of `SYS_DEVIO` and `SYS_VDEVIO` are in
+[`minix/kernel/system/`]({{repo}}/blob/{{branch}}/minix/kernel/system) but
+are compiled only for x86.
 
 ### What changed on amd64 and SMP
 
