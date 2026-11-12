@@ -12,8 +12,8 @@ export const site = {
   name: 'Ixolo',
   /** Lower-case wordmark used by the logo and file names. */
   slug: 'ixolo',
-  /** Public domain, without protocol.  null until it is bought. */
-  domain: null as string | null,
+  /** Public domain, without protocol.  Also set in repo Settings → Pages. */
+  domain: 'ixolo.org' as string | null,
   maintainer: 'David Montero',
 
   repo: 'https://github.com/davmont/minix',

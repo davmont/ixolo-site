@@ -49,19 +49,30 @@ few literal `[PLACEHOLDER]` strings in the copy (such as news dates).
 
 `npm run build` produces `dist/`, a plain static site with no server code.
 
-- **GitHub Pages (free).** `.github/workflows/deploy.yml` builds and
-  publishes on every push to `main`. Enable it in the repo under Settings →
-  Pages → Source: GitHub Actions, then add the custom domain there and point
-  DNS at GitHub (a CNAME record for `www`, A/AAAA records for the apex).
-  HTTPS is automatic.
+- **GitHub Pages (free), at ixolo.org.** `.github/workflows/deploy.yml`
+  builds and publishes on every push to `main`. In the repo: Settings → Pages
+  → Source: GitHub Actions; Custom domain: `ixolo.org`; then tick Enforce
+  HTTPS once the certificate is issued. DNS at the registrar:
+
+  | Type | Name | Value |
+  |---|---|---|
+  | A | `@` | `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` |
+  | AAAA | `@` | `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153` |
+  | CNAME | `www` | `davmont.github.io` |
+
+  A name with a CNAME can have no other records, so the registrar refuses it
+  while `www` has A records. Giving `www` the same four A records instead
+  works too, and is the current setup. Either way `www.ixolo.org` redirects
+  to `ixolo.org`. Verify the domain under
+  your account (Settings → Pages → Add a domain) so no one else can claim it.
 - **Plesk VPS.** Create the domain in Plesk and copy `dist/` into its
   `httpdocs`, for example with
   `rsync -av --delete dist/ user@vps:/var/www/vhosts/<domain>/httpdocs/`,
   or use Plesk's Git extension to pull the repo and run `npm ci && npm run build`.
   Enable Let's Encrypt in Plesk for HTTPS.
 
-Once the domain exists, set `domain` in `src/site.config.ts`: it is used for
-canonical URLs, `hreflang` links and the sitemap.
+`domain` in `src/site.config.ts` is used for canonical URLs, `hreflang` links
+and the sitemap.
 
 **Release ISOs** (about 1.5 GB) should be attached to GitHub Releases on the OS
 repo (2 GB per file limit, free bandwidth), not served from the website host.
