@@ -49,9 +49,9 @@ few literal `[PLACEHOLDER]` strings in the copy (such as news dates).
 
 `npm run build` produces `dist/`, a plain static site with no server code.
 
-- **GitHub Pages (free), at ixolo.org.** `.github/workflows/deploy.yml`
+- **GitHub Pages (free), at www.ixolo.org.** `.github/workflows/deploy.yml`
   builds and publishes on every push to `main`. In the repo: Settings → Pages
-  → Source: GitHub Actions; Custom domain: `ixolo.org`; then tick Enforce
+  → Source: GitHub Actions; Custom domain: `www.ixolo.org`; then tick Enforce
   HTTPS once the certificate is issued. DNS at the registrar:
 
   | Type | Name | Value |
@@ -62,8 +62,8 @@ few literal `[PLACEHOLDER]` strings in the copy (such as news dates).
 
   A name with a CNAME can have no other records, so the registrar refuses it
   while `www` has A records. Giving `www` the same four A records instead
-  works too, and is the current setup. Either way `www.ixolo.org` redirects
-  to `ixolo.org`. Verify the domain under
+  works too, and is the current setup. Either way `ixolo.org` redirects to
+  `www.ixolo.org`. Verify the domain under
   your account (Settings → Pages → Add a domain) so no one else can claim it.
 - **Plesk VPS.** Create the domain in Plesk and copy `dist/` into its
   `httpdocs`, for example with

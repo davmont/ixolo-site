@@ -13,7 +13,7 @@ export const site = {
   /** Lower-case wordmark used by the logo and file names. */
   slug: 'ixolo',
   /** Public domain, without protocol.  Also set in repo Settings → Pages. */
-  domain: 'ixolo.org' as string | null,
+  domain: 'www.ixolo.org' as string | null,
   maintainer: 'David Montero',
 
   repo: 'https://github.com/davmont/minix',

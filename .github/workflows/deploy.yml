@@ -1,6 +1,6 @@
 # Build the site and publish it on GitHub Pages on every push to main.
 # One-time setup: repo Settings → Pages → Source: "GitHub Actions".
-# Custom domain (ixolo.org): Settings → Pages → Custom domain, plus the DNS
+# Custom domain (www.ixolo.org): Settings → Pages → Custom domain, plus the DNS
 # records listed in README.md.  No CNAME file is needed with Actions deploys.
 name: deploy
 on:
@@ -24,7 +24,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      # Served at the root of ixolo.org, so no BASE_PATH.  To serve from
+      # Served at the root of www.ixolo.org, so no BASE_PATH.  To serve from
       # davmont.github.io/ixolo-site/ again, set BASE_PATH: /ixolo-site.
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
