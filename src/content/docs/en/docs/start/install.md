@@ -14,13 +14,11 @@ first steps on the installed system.
 - **`setup` installs for BIOS boot only.** It writes an MBR partition table
   and a BIOS boot block. There is no UEFI disk install yet (see
   [BIOS and UEFI](#bios-and-uefi-disk-boot)).
-- **`setup` on amd64 has a known bug.** On {{branch}} it still looks for the
-  installation sets under `/i386/binary/sets`, but the amd64 ISO keeps them
-  under `/amd64/binary/sets`. As shipped, it creates the file systems and then
-  copies nothing. The workaround in [step 2](#2-run-setup) has not been
-  verified end to end; until this is fixed, the
-  [disk image built from source](#alternative-build-a-disk-image) is the
-  tested way to get a system on disk.
+- **Use a recent ISO.** `setup` works on amd64 since the installer fixes of
+  November 2026. On older ISOs it fails in one of several ways: it copies
+  nothing; the copy crawls for hours on `q35`; the live system runs out of
+  memory part-way; or it stops right after copying, before installing the boot
+  block.
 - Installing to a physical disk erases the partition you choose. Back up first.
 :::
 
@@ -41,16 +39,22 @@ QEMU/KVM.
 
 ## Install in QEMU
 
-Create a virtual disk and boot the ISO with it attached. The default QEMU
-machine (`pc`) puts both on the IDE controller, which keeps device names
-simple: the disk is `c0d0`, the CD `c0d2`.
+Create a virtual disk and boot the ISO with it attached. Use the `q35`
+machine, whose disk controller is AHCI. QEMU attaches `if=ide` drives to it,
+so the device names stay simple: the disk is `c0d0`, the CD `c0d2`.
 
 ```sh
 qemu-img create -f qcow2 {{slug}}.qcow2 8G
-qemu-system-x86_64 -enable-kvm -cpu host -m 2G \
+qemu-system-x86_64 -enable-kvm -cpu host -machine q35 -m 2G \
   -drive file={{slug}}.qcow2,format=qcow2,if=ide \
   -cdrom {{iso}} -boot d
 ```
+
+:::note
+Avoid the default `pc` machine for installing. Its disk is on the emulated
+IDE controller, where {{name}} writes at only about 270 KB/s, so copying the
+files takes hours. On `q35` it writes at 12 to 15 MB/s.
+:::
 
 Log in as `root` (no password on the live system) and continue below.
 
@@ -74,12 +78,8 @@ long repair. See [File systems](/en/docs/admin/filesystems/).
 
 ### 2. Run setup
 
-Because of the path bug above, run a corrected copy of the script. `/tmp` is
-writable on the live system:
-
 ```sh
-sed 's,/i386/binary/sets,/amd64/binary/sets,g' /bin/setup > /tmp/setup
-sh /tmp/setup
+setup
 ```
 
 Press Enter to accept a default answer. The steps are:
@@ -96,7 +96,8 @@ Press Enter to accept a default answer. The steps are:
 6. **Block size**, 1 to 64 kB (default 4 kB). Keep the default.
 7. **Copy files.** The sets are unpacked onto the new file systems, device
    nodes are made, the BIOS boot block is installed and `/boot.cfg` is
-   generated.
+   generated. In QEMU/KVM on `q35`, the whole of `setup` takes about seven
+   minutes, most of it here.
 8. **Network.** `setup` runs `netconf -p /mnt` to configure an interface; see
    [Networking](/en/docs/admin/network/). You can skip it and run `netconf`
    later.
@@ -117,7 +118,7 @@ poweroff
 ```
 
 ```sh
-qemu-system-x86_64 -enable-kvm -cpu host -m 2G \
+qemu-system-x86_64 -enable-kvm -cpu host -machine q35 -m 2G \
   -drive file={{slug}}.qcow2,format=qcow2,if=ide
 ```
 
@@ -153,7 +154,7 @@ get along with the APIC. Root has no password on this image: set one with
 |---|---|
 | ISO, BIOS | Works. |
 | ISO, UEFI (GRUB) | Works, on `-machine pc` (IDE) and `-machine q35` (AHCI). |
-| Disk installed by `setup`, BIOS | MBR, the `bootxx_minixfs3` boot block and the MINIX boot monitor, as on the disk image. Not verified end to end on amd64 (see the `setup` bug above). |
+| Disk installed by `setup`, BIOS | Works: MBR, the `bootxx_minixfs3` boot block and the MINIX boot monitor, as on the disk image. Tested end to end under QEMU (`q35`) in November 2026. |
 | Disk image from `amd64_hdimage.sh`, BIOS | Works; this is how the system has been run from a writable MFS root. Not covered by CI. |
 | GPT disk image from `amd64_gptimage.sh`, UEFI | **Not usable yet.** GRUB, the kernel and the root mount work, but [`docs/UEFI_BOOT.md`]({{repo}}/blob/{{branch}}/docs/UEFI_BOOT.md) records a stall at the very end of `/etc/rc`, before the login prompt, on this image. |
 | Secure Boot | Not supported. |

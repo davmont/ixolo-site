@@ -189,10 +189,8 @@ by the automated tests.
 - amd64 only. i386 does not build on `{{branch}}`; ARM has not been
   maintained since the fork.
 - Tested mainly in QEMU/KVM. Physical machines verified: {{hardware}}.
-- The installer, `setup`, still looks for the installation sets under
-  `/i386/binary/sets` and copies nothing from the amd64 ISO. It installs for
-  BIOS only. See [Install to disk](/en/docs/start/install/) for the
-  workaround and the disk-image alternative.
+- The installer, `setup`, installs for BIOS only, and is slow on an IDE
+  disk under QEMU. See [Install to disk](/en/docs/start/install/).
 - No binary package repository for amd64. `pkg_add` is in the base system;
   `pkgin` is not.
 - No debugger (gdb or lldb).
