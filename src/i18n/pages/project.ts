@@ -35,6 +35,8 @@ export default {
         'Merge devel into master and carry the new name into the system',
         'A usable desktop ISO: Wayland, LXQt and Qt 6',
         'Release images, checksums and up-to-date release notes',
+        'A working disk installer (setup) on amd64, with a tested install guide',
+        'From the MINIX wish lists: atomic dup2 and pselect, SEM_UNDO, GPT partition tables',
       ]],
       ['Next', [
         'Position-independent executables and RELRO; hardening for system services',
@@ -48,6 +50,7 @@ export default {
         'A wider USB stack: keyboards, mice and more',
         'Live update on amd64',
         '[GOALS TO DEFINE]',
+        'The rest of the MINIX wish lists: devfs, true vector I/O, SysV message queues, a VFS pipe rewrite and more (docs/ROADMAP.md in the repository)',
       ]],
     ],
     originEyebrow: 'Origin',
@@ -104,6 +107,8 @@ export default {
         'Integrar devel en master y llevar el nuevo nombre al sistema',
         'Una ISO con escritorio usable: Wayland, LXQt y Qt 6',
         'Imágenes de versión, sumas de control y notas de versión al día',
+        'Un instalador en disco (setup) que funcione en amd64, con una guía de instalación probada',
+        'De las listas de deseos de MINIX: dup2 y pselect atómicos, SEM_UNDO, tablas de particiones GPT',
       ]],
       ['Siguiente', [
         'Ejecutables independientes de posición (PIE) y RELRO; endurecer los servicios del sistema',
@@ -117,6 +122,7 @@ export default {
         'Ampliar la pila USB: teclados, ratones y más',
         'Actualización en caliente (live update) en amd64',
         '[OBJETIVOS A DEFINIR]',
+        'El resto de las listas de deseos de MINIX: devfs, E/S vectorial real, colas de mensajes SysV, reescribir las tuberías de VFS y más (docs/ROADMAP.md en el repositorio)',
       ]],
     ],
     originEyebrow: 'Origen',
