@@ -9,7 +9,7 @@ sidebar:
 reciente de un código que se enseña, se estudia y se reescribe desde 1984.
 Conocer esa historia explica muchas cosas del árbol de código: por qué
 algunos ficheros tienen comentarios de tres épocas distintas, por qué las
-herramientas de usuario vienen de NetBSD y por qué la versión sigue diciendo
+herramientas de usuario vienen de NetBSD y por qué `uname -r` sigue diciendo
 3.4.0.
 
 Las fechas de esta página salen de las fuentes enumeradas al final. Cuando
@@ -111,10 +111,18 @@ upstream no se han conservado: i386 ya no compila, el port a ARM no se ha
 tocado desde el fork y la actualización en caliente no funciona en amd64.
 
 :::note[El nombre en el árbol de código]
-El cambio de nombre empieza por esta web. El árbol de código sigue diciendo
-«MINIX 3» en el menú de arranque, en `uname` y en el número de versión
-(3.4.0). {{name}} es un derivado independiente de MINIX 3. No está afiliado
-al proyecto MINIX ni a la Vrije Universiteit, ni cuenta con su respaldo.
+El árbol de código adoptó el nombre en noviembre de 2026
+([#494]({{repo}}/pull/494)). Lo que lee una persona dice {{name}} 0.1.0: los
+menús de arranque, el mensaje inicial del núcleo, el instalador,
+`/etc/motd`, `uname -v` y el nuevo `/etc/os-release`. Lo que lee el
+software sigue diciendo MINIX, a propósito: `uname -s` es `Minix`,
+`uname -r` es `3.4.0`, y se mantienen la macro `__minix`, el directorio
+`minix/` del código, el sistema de ficheros MFS y los nombres de imagen
+`minix_*.iso`. El mensaje del núcleo sigue diciendo «Based on MINIX 3». Se
+escapó un menú: las entradas de GRUB que escribe `amd64_hdimage.sh` cuando
+se le pide una partición EFI siguen diciendo «Minix Boot». {{name}} es un
+derivado independiente de MINIX 3. No está afiliado al proyecto MINIX ni a
+la Vrije Universiteit, ni cuenta con su respaldo.
 :::
 
 Para ver cómo es {{name}} hoy, empieza por la

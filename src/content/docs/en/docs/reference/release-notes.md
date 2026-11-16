@@ -9,7 +9,7 @@ sidebar:
 
 :::note
 {{name}} has not had a release yet. These notes describe the `{{branch}}`
-branch as of November 2026 (up to [PR #491]({{repo}}/pull/491)) and will
+branch as of November 2026 (up to [PR #504]({{repo}}/pull/504)) and will
 become the notes of the first release.
 :::
 
@@ -47,6 +47,15 @@ by the automated tests.
   present.
 - `setup` finds the installation sets on the amd64 ISO and stops if a set
   fails to extract ([#489]({{repo}}/pull/489)).
+- `setup` installs a bootable system on amd64: the MBR and BIOS boot code
+  are built for amd64, and VM no longer leaks a page each time it faults in
+  a page that is already present ([#497]({{repo}}/pull/497)).
+- The ACPI service reads PCI interrupt routing tables of any size, so AHCI no
+  longer loses interrupts on QEMU's `q35` machine ([#496]({{repo}}/pull/496)).
+- The system is named {{name}} 0.1.0 in the boot menus, the kernel banner,
+  the installer, `/etc/motd` and `uname -v`, and has an `/etc/os-release`;
+  `uname -s` and `uname -r` stay `Minix` and `3.4.0`
+  ([#494]({{repo}}/pull/494)).
 
 ### Multiprocessor (SMP)
 
@@ -81,6 +90,8 @@ by the automated tests.
 - At most 65530 mappings per user process, and a `MAP_FIXED` `mmap` that
   does not fit fails with `ENOMEM` instead of unmapping
   ([#490]({{repo}}/pull/490)).
+- `mlock` and `mlockall` pin pages, and `RLIMIT_MEMLOCK` is enforced
+  ([#492]({{repo}}/pull/492)).
 - *Experimental:* disk swap in the kernel and VM
   ([#299]({{repo}}/pull/299), [#300]({{repo}}/pull/300),
   [#310]({{repo}}/pull/310)). There is no `swapon` tool to turn it on yet.
@@ -116,6 +127,8 @@ by the automated tests.
   ([#188]({{repo}}/pull/188), [#192]({{repo}}/pull/192)–[#194]({{repo}}/pull/194)).
 - AHCI, and IDE with a fix for disks over 2 TB ([#274]({{repo}}/pull/274)).
 - A framebuffer device, `/dev/fb0`, under UEFI.
+- The disk drivers read GPT partition tables when the MBR is only
+  protective, up to four partitions ([#502]({{repo}}/pull/502)).
 - The e1000 network driver is the one tested. The other network, audio and
   `virtio_blk` drivers build for amd64 but have not been tested on it.
 
@@ -144,6 +157,12 @@ by the automated tests.
   [#474]({{repo}}/pull/474)), process-shared synchronization
   ([#479]({{repo}}/pull/479)), thread cancellation
   ([#481]({{repo}}/pull/481), [#488]({{repo}}/pull/488)).
+- `clock_gettime` and `gettimeofday` read the TSC between ticks without a
+  system call; timeouts and timers never end early; POSIX timers count in
+  nanoseconds ([#493]({{repo}}/pull/493)).
+- Atomic `dup2` and `dup3` ([#499]({{repo}}/pull/499)); atomic `pselect`,
+  `pollts` and `paccept` ([#500]({{repo}}/pull/500)); `SEM_UNDO` for
+  System V semaphores ([#501]({{repo}}/pull/501)).
 - Open POSIX Test Suite: {{posixPassed}} of {{posixTotal}} tests pass;
   pjdfstest: {{pjdfstestPassed}} of {{pjdfstestTotal}}. Details on the
   [POSIX page](/en/docs/reference/posix/).
@@ -178,6 +197,10 @@ by the automated tests.
   and others. See the [third-party inventory](/en/docs/design/third-party/).
 - Manual pages ship on the ISO ([#165]({{repo}}/pull/165)); new `free(1)`
   ([#225]({{repo}}/pull/225)).
+- Builds with the host's clang 22 (`build.sh -c clang-22`) link with
+  `ld.lld` ([#494]({{repo}}/pull/494)), and their dynamic programs use
+  `/usr/libexec/ld.elf_so` as their interpreter, so they run on the target
+  ([#498]({{repo}}/pull/498)).
 
 ### Desktop (experimental)
 
@@ -185,6 +208,8 @@ by the automated tests.
   with software rendering ([#329]({{repo}}/pull/329)–[#360]({{repo}}/pull/360)).
 - Opt-in: built out of tree, needs UEFI, not on the default ISO and not
   tested in CI. See the [desktop guide](/en/docs/admin/desktop/).
+- Manual pages for `wlcompd(8)`, `fbcompd(8)`, `wlclient(1)`, `wlprobe(1)`
+  and `wlcoreprobe(1)` ([#503]({{repo}}/pull/503)).
 
 ### Testing
 
@@ -208,7 +233,8 @@ by the automated tests.
   known failure.
 - No tool to enable swap; USB keyboards and mice are not supported; no UEFI
   Secure Boot.
-- The tree still calls itself MINIX 3, version 3.4.0 (boot menu, `uname`).
+- The GRUB entries that `amd64_hdimage.sh` writes for an EFI partition still
+  read "Minix Boot".
 
 ## Lineage
 
@@ -222,11 +248,11 @@ by the automated tests.
 | Nov 2018 | Last upstream commit, `4db99f4`: the base of the fork |
 | Mar 2026 | The fork starts |
 | May 2026 | amd64 boots to a login prompt (on `master`, [#153]({{repo}}/pull/153)) |
-| Jun–Nov 2026 | Development on `{{branch}}`, PRs [#154]({{repo}}/pull/154) to [#491]({{repo}}/pull/491) |
+| Jun–Nov 2026 | Development on `{{branch}}`, PRs [#154]({{repo}}/pull/154) to [#504]({{repo}}/pull/504) |
 
 The tree also has its own
-[`RELEASE_NOTES.md`]({{repo}}/blob/{{branch}}/RELEASE_NOTES.md). It covers
-March to early June 2026 only and has not been updated since. These notes
-replace it for everything after.
+[`RELEASE_NOTES.md`]({{repo}}/blob/{{branch}}/RELEASE_NOTES.md). Apart from
+an entry for the rename to {{name}} 0.1.0 (November 2026), it covers March
+to early June 2026 only. These notes replace it for everything after.
 
 For the longer story, see [history](/en/docs/learn/history/).

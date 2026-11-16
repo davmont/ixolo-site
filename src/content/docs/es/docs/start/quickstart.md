@@ -67,8 +67,9 @@ el núcleo entra en pánico al principio del arranque con un mensaje que pide
 :::
 
 El menú de arranque espera 10 segundos y arranca la primera entrada,
-**Regular MINIX 3**. El código aún usa el nombre de upstream en menús y
-mensajes.
+**Regular Ixolo**. Después el núcleo escribe
+`Ixolo 0.1.0 (MINIX 3.4.0 kernel)` y `Based on MINIX 3`: {{name}} es el
+sistema, y MINIX 3 sigue siendo el nombre de su núcleo.
 
 ### Arrancar con UEFI en vez de BIOS
 
@@ -117,7 +118,10 @@ login: root
 # uname -a
 ```
 
-`uname` muestra `Minix 3.4.0`: la cadena de versión aún no se ha cambiado.
+`uname -v` muestra `Ixolo 0.1.0 (Minix 3.4.0 GENERIC)`. El nombre del
+sistema (`uname -s`) sigue siendo `Minix` y la versión (`uname -r`), `3.4.0`,
+a propósito: los scripts de compilación y los paquetes los comprueban.
+`/etc/os-release` nombra a {{name}} (`ID=ixolo`, `ID_LIKE=minix`).
 
 ## 5. Míralo regenerarse
 

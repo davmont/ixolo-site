@@ -9,7 +9,7 @@ sidebar:
 latest branch of a code base that has been taught, studied and rewritten
 since 1984. Knowing that history explains a lot about the source tree: why
 there are three generations of comments in some files, why the user-space
-tools come from NetBSD, and why the version string still says 3.4.0.
+tools come from NetBSD, and why `uname -r` still says 3.4.0.
 
 The dates below come from the sources listed at the end of the page. Where
 a date only comes from file timestamps or press coverage, the table says so.
@@ -107,10 +107,17 @@ has not been touched since the fork, and the live-update feature has not
 been made to work on amd64.
 
 :::note[The name in the source tree]
-The rename is happening on this website first. The source tree still says
-"MINIX 3" in the boot menu, in `uname` and in the version number (3.4.0).
-{{name}} is an independent derivative of MINIX 3. It is not affiliated
-with or endorsed by the MINIX project or the Vrije Universiteit.
+The source tree took the name in November 2026
+([#494]({{repo}}/pull/494)). What a person reads says {{name}} 0.1.0: the boot
+menus, the kernel banner, the installer, `/etc/motd`, `uname -v` and the new
+`/etc/os-release`. What software reads still says MINIX, on purpose:
+`uname -s` is `Minix`, `uname -r` is `3.4.0`, and the `__minix` macro, the
+`minix/` source directory, the MFS file system and the `minix_*.iso` image
+names stay. The kernel banner still says "Based on MINIX 3". One menu was
+missed: the GRUB entries that `amd64_hdimage.sh` writes when it is asked for
+an EFI partition still read "Minix Boot". {{name}} is an independent
+derivative of MINIX 3. It is not affiliated with or endorsed by the MINIX
+project or the Vrije Universiteit.
 :::
 
 To see what {{name}} looks like today, start with the

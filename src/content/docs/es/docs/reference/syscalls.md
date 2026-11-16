@@ -51,16 +51,23 @@ descriptores. Un `mmap` de un fichero va a VM, que pide el fichero a VFS.
 PM no decide la planificación. Pasa estas peticiones al servidor SCHED, que
 fija prioridades y CPU a través del núcleo.
 
+Con un TSC invariante, la libc responde `clock_gettime` y `gettimeofday`
+para `CLOCK_REALTIME` y `CLOCK_MONOTONIC` sin llamar a PM: lee la hora del
+último tick de reloj en una página que el núcleo comparte con todos los
+procesos y le suma lo que ha contado el TSC desde entonces
+([#493]({{repo}}/pull/493)). La opción de arranque `hirestime=0` lo
+desactiva, y todas las lecturas vuelven a pasar por PM.
+
 ### VFS: ficheros, descriptores y sockets
 
 | Grupo | Llamadas |
 |---|---|
 | Llamadas con ruta | `openat`, `fstatat`, `mkdirat`, `mknodat`, `unlinkat`, `linkat`, `renameat`, `symlinkat`, `readlinkat`, `fchmodat`, `fchownat`, `faccessat`, `utimensat`. Las clásicas `open`, `stat`, `mkdir`, `unlink`... son estas mismas con `AT_FDCWD`. |
 | E/S | `read`, `write`, `pread`, `pwrite`, `lseek`, `ioctl`, `getdents` |
-| Descriptores | `close`, `fcntl` (también `dup` y `dup2`), `pipe2`, `umask`, `flock`, bloqueos de registros mediante `fcntl` |
+| Descriptores | `close`, `fcntl` (también `dup`; `dup2` y `dup3` usan las órdenes `F_DUP2FD` propias de MINIX, así que el cambio es atómico), `pipe2`, `umask`, `flock`, bloqueos de registros mediante `fcntl` |
 | Estado del fichero | `fstat`, `fchmod`, `fchown`, `truncate`/`ftruncate`, `posix_fallocate`, `fsync` (también `fdatasync`), `sync`, `chflags`/`fchflags`, la familia `extattr_*` (y las ACL construidas sobre ella) |
 | Directorios y montajes | `chdir`, `fchdir`, `chroot`, `statvfs1`/`fstatvfs1`, `getvfsstat`; el montaje va por las funciones propias de MINIX `minix_mount`/`minix_umount`, que usan `mount(1)` y `umount(1)` |
-| Espera | `select` (y `pselect`), `kqueue1`, `kevent`. La libc construye `poll` sobre `select`, y también `nanosleep`. |
+| Espera | `select` (y `pselect`), `kqueue1`, `kevent`. La libc construye `poll` sobre `select`, y también `nanosleep`. `pselect`, `pollts`/`ppoll` y `paccept` preparan antes la llamada con `VFS_SIGARM`, así que una señal capturada antes de que se bloquee la hace fallar con `EINTR`. |
 | Sockets | `socket`, `socketpair`, `bind`, `connect`, `listen`, `accept` (y `accept4`/`paccept`), `sendto`, `sendmsg`, `recvfrom`, `recvmsg`, `setsockopt`, `getsockopt`, `getsockname`, `getpeername`, `shutdown` |
 
 VFS pasa las operaciones de fichero al servidor del sistema de ficheros que
@@ -79,17 +86,15 @@ fichero.
 | `brk`/`sbrk` | El heap clásico |
 | `mmap`, `munmap` | Proyecciones anónimas y de ficheros. Las proyecciones `MAP_SHARED` de escritura funcionan en MFS y tmpfs; otros sistemas de ficheros devuelven `ENODEV`. |
 | `mprotect`, `msync` | Nuevas en {{name}} |
-| `getrlimit`/`setrlimit` | VM aplica `RLIMIT_AS` y `RLIMIT_DATA`. Los demás límites los responde la propia libc, con valores fijos. |
-
-`mlock`, `munlock`, `mlockall` y `munlockall` existen en la libc. Comprueban
-argumentos y permisos, pero no fijan páginas en memoria.
+| `mlock`, `munlock`, `mlockall`, `munlockall` | Mediante la llamada `VM_MLOCK`. Las páginas bloqueadas se cargan y se quedan en memoria: la recuperación de memoria no las comprime, ni las manda al swap, ni las desaloja ([#492]({{repo}}/pull/492)). |
+| `getrlimit`/`setrlimit` | VM aplica `RLIMIT_AS`, `RLIMIT_DATA` y `RLIMIT_MEMLOCK` (8 MB por defecto). Los demás límites los responde la propia libc, con valores fijos. |
 
 ### Servidor IPC: IPC de System V y POSIX
 
 | Grupo | Llamadas |
 |---|---|
 | Memoria compartida System V | `shmget`, `shmat`, `shmdt`, `shmctl` |
-| Semáforos System V | `semget`, `semctl`, `semop` |
+| Semáforos System V | `semget`, `semctl`, `semop`, con `SEM_UNDO` ([#501]({{repo}}/pull/501)) |
 | Colas de mensajes POSIX | `mq_open`, `mq_close`, `mq_unlink`, `mq_send`/`mq_timedsend`, `mq_receive`/`mq_timedreceive`, `mq_getattr`/`mq_setattr`, `mq_notify` |
 | Semáforos POSIX | `sem_open`, `sem_close`, `sem_unlink`, y `sem_init` con `pshared` (los semáforos locales al proceso se quedan en libpthread) |
 | Objetos pthread compartidos entre procesos | Colas de espera de mutex, variables de condición, rwlocks y barreras `PTHREAD_PROCESS_SHARED` |
@@ -121,7 +126,7 @@ como llamada a un servidor. Se añadieron en el camino hacia {{name}}:
 | Control de procesos | `waitid`, `setpgid`/`getpgid` con control de trabajos real, `setresuid`/`setresgid` |
 | Señales | `sigaltstack`, señales de tiempo real, `sigqueue`, `sigtimedwait` |
 | Temporizadores y planificación | `timer_*`, relojes de tiempo de CPU, `sched_*` con `SCHED_FIFO`/`SCHED_RR`, afinidad de CPU |
-| Memoria | `mprotect`, `msync`, `RLIMIT_AS`/`RLIMIT_DATA` |
+| Memoria | `mprotect`, `msync`, un `mlock` que fija páginas, `RLIMIT_AS`/`RLIMIT_DATA`/`RLIMIT_MEMLOCK` |
 | IPC | Colas de mensajes POSIX, semáforos con nombre y compartidos entre procesos, objetos pthread compartidos |
 | Biblioteca | AIO de POSIX en una `librt` nueva |
 

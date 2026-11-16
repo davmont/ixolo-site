@@ -92,7 +92,7 @@ it. That keeps the lists honest.
 | [`qemutest.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest.xfail) | `quick` | 11 entries: ptrace (42), 64-bit `strtoll` and arithmetic (45, 53, 66), ptyfs (77), one outdated test (`mfs`), one uninvestigated (`isofs`), and flaky ones |
 | [`qemutest-tcg.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-tcg.xfail) | `quick` under TCG | Timer-driven and slow tests that pass on KVM but stall on a slow emulated host; merged with the first list |
 | [`qemutest-pjdfstest.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-pjdfstest.xfail) | `pjdfstest` | 8 scripts: MFS keeps whole-second timestamps, and long paths do not fail with `ENAMETOOLONG` as POSIX expects |
-| [`qemutest-posix.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-posix.xfail) | `posix` | 74 entries, 11 of them flaky timing tests; each says how it failed |
+| [`qemutest-posix.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-posix.xfail) | `posix` | 67 entries, 11 of them flaky timing tests; each says how it failed |
 
 ## The Open POSIX Test Suite
 

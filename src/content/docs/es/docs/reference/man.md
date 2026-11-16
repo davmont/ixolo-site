@@ -108,6 +108,20 @@ Mira también la [guía de sistemas de ficheros](/es/docs/admin/filesystems/).
 | [`trace(1)`]({{repo}}/blob/{{branch}}/minix/usr.bin/trace/trace.1) | Muestra las llamadas al sistema y señales de un proceso. Usa `ptrace(2)`, que aún tiene fallos conocidos en amd64 (test 42). |
 | [`hier(7)`]({{repo}}/blob/{{branch}}/minix/man/man7/hier.7) | La estructura del sistema de ficheros. |
 
+### Escritorio
+
+Nuevas en {{name}} ([#503]({{repo}}/pull/503)).
+
+| Página | Qué cubre |
+|---|---|
+| [`wlcompd(8)`]({{repo}}/blob/{{branch}}/minix/commands/wlcompd/wlcompd.8) | El compositor Wayland: dibuja en `/dev/fb0`, recibe la entrada del teclado y el ratón, y atiende a los clientes en `$XDG_RUNTIME_DIR/wayland-N`. |
+| [`fbcompd(8)`]({{repo}}/blob/{{branch}}/minix/commands/fbcompd/fbcompd.8) | El compositor de framebuffer anterior, una prueba de concepto previa a `wlcompd` que no habla Wayland. |
+| [`wlclient(1)`]({{repo}}/blob/{{branch}}/minix/commands/wlclient/wlclient.1) | Un pequeño cliente Wayland que comprueba la pila de principio a fin contra `wlcompd`. |
+| [`wlprobe(1)`]({{repo}}/blob/{{branch}}/minix/commands/wlprobe/wlprobe.1) | Comprueba, paso a paso, el camino de memoria compartida por el que un cliente Wayland pasa sus píxeles al compositor. |
+| [`wlcoreprobe(1)`]({{repo}}/blob/{{branch}}/minix/commands/wlcoreprobe/wlcoreprobe.1) | Comprueba el bucle de eventos de libwayland-server sobre la emulación de epoll, timerfd, signalfd y eventfd. |
+
+La [guía del escritorio](/es/docs/admin/desktop/) los muestra en uso.
+
 ## Las páginas de NetBSD como referencia
 
 Casi todo el espacio de usuario y la libc vienen de NetBSD, en versiones
@@ -122,8 +136,8 @@ Tómalas como guía, no como contrato. El núcleo, los servidores y buena parte
 de la capa de llamadas al sistema son propios de MINIX, así que el
 comportamiento puede variar. Dos ejemplos: aquí `kqueue(2)` admite los
 filtros de lectura, escritura, vnode, temporizador y usuario, pero no los de
-señales, procesos y AIO; y `mlock(2)` comprueba sus argumentos pero no fija
-páginas en memoria. Ante la duda, la
+señales, procesos y AIO; y `poll(2)` está construida sobre `select(2)`, así
+que no informa de `POLLHUP`. Ante la duda, la
 [referencia de llamadas al sistema](/es/docs/reference/syscalls/) y la
 [página de POSIX](/es/docs/reference/posix/) dicen lo que hace {{name}}, y el
 código fuente tiene la última palabra.

@@ -57,15 +57,15 @@ se ha mantenido.
 |---|---|
 | Hilos | libpthread sobre hilos planificados por el núcleo (llamadas `_lwp_*` en PM). `fork` desde un hilo, `pthread_detach`, esperas con plazo, cancelación asíncrona y diferida. Mutex, variables de condición, rwlocks y barreras compartidos entre procesos. Mutex `PTHREAD_PRIO_INHERIT` y `PTHREAD_PRIO_PROTECT`. |
 | Señales | `SA_SIGINFO` con `ucontext`, `sigaltstack`, `SA_RESTART`, `pthread_kill`, entrega de una señal de proceso a cualquier hilo que no la bloquee. Señales de tiempo real de `SIGRTMIN` a `SIGRTMAX`, encoladas con valor: `sigqueue`, `sigwaitinfo`, `sigtimedwait`. |
-| Relojes y temporizadores | `CLOCK_REALTIME`, `CLOCK_MONOTONIC`, relojes de tiempo de CPU de proceso y de hilo, `timer_create` y las demás `timer_*`, `clock_nanosleep`. Cambiar la hora ya no altera el reloj monótono ni las esperas con plazo. |
-| IPC | Colas de mensajes POSIX (`mq_*`), semáforos con nombre y compartidos entre procesos (hasta 256 en el sistema), `shm_open` como ficheros en un tmpfs en `/var/shm`. Memoria compartida y semáforos de System V. |
+| Relojes y temporizadores | `CLOCK_REALTIME`, `CLOCK_MONOTONIC`, relojes de tiempo de CPU de proceso y de hilo, `timer_create` y las demás `timer_*`, `clock_nanosleep`. Cambiar la hora ya no altera el reloj monótono ni las esperas con plazo. Con un TSC invariante, `clock_gettime` y `gettimeofday` leen los dos relojes al nanosegundo sin llamada al sistema ([#493]({{repo}}/pull/493)). Los plazos de `select`, `poll`, `sigtimedwait`, las esperas con plazo, `setitimer`/`alarm` y los temporizadores POSIX nunca vencen antes de tiempo, y como mucho un tick tarde (dos sin el TSC); los temporizadores POSIX guardan su vencimiento y su intervalo en nanosegundos. |
+| IPC | Colas de mensajes POSIX (`mq_*`), semáforos con nombre y compartidos entre procesos (hasta 256 en el sistema), `shm_open` como ficheros en un tmpfs en `/var/shm`. Memoria compartida y semáforos de System V, con `SEM_UNDO` ([#501]({{repo}}/pull/501)). |
 | E/S asíncrona | `aio_*` y `lio_listio` en `librt`. No hay AIO en el núcleo: un grupo de hilos hace la E/S con `pread` y `pwrite`. Las señales de fin llegan con `SI_ASYNCIO`. |
 | Planificación | Llamadas `sched_*`, `SCHED_FIFO` y `SCHED_RR` para root, en una franja por debajo de los servicios del sistema. Si los procesos de tiempo real pasan del 95 % de una CPU, se les frena para que una shell aún pueda matar a uno desbocado. Afinidad de CPU con `sched_setaffinity_np` y `pthread_setaffinity_np`. |
 | Bloqueos de ficheros | Bloqueos de registros con `fcntl`, y `flock`. |
 | Llamadas con ruta | La familia `*at`, `O_NOFOLLOW`, `O_DIRECTORY`; un puntero de ruta no válido devuelve `EFAULT`. |
-| Ficheros y E/S | `pread`/`pwrite`, `preadv`/`pwritev`, `posix_fallocate`, `O_SYNC`/`O_DSYNC`, `fdatasync` (un `fsync` completo). |
-| Memoria | `mmap` respetando `PROT_*`, `mprotect`, `msync`, proyecciones `MAP_SHARED` de escritura de ficheros en MFS y tmpfs, memoria anónima `MAP_SHARED` compartida tras `fork`. |
-| Espera | `select`, `pselect`, `poll` y `ppoll` para todos los procesos (ya no existe el antiguo límite de 25 procesos a la vez), `POLLNVAL`. `kqueue`/`kevent` con los filtros de lectura, escritura, vnode, temporizador y usuario. |
+| Ficheros y E/S | `pread`/`pwrite`, `preadv`/`pwritev`, `posix_fallocate`, `O_SYNC`/`O_DSYNC`, `fdatasync` (un `fsync` completo). `dup2` y `dup3` son atómicas: otro hilo no puede quedarse con el descriptor de destino entre medias ([#499]({{repo}}/pull/499)). |
+| Memoria | `mmap` respetando `PROT_*`, `mprotect`, `msync`, proyecciones `MAP_SHARED` de escritura de ficheros en MFS y tmpfs, memoria anónima `MAP_SHARED` compartida tras `fork`. `mlock` y `mlockall` fijan páginas en memoria, hasta `RLIMIT_MEMLOCK` (8 MB por defecto; root puede pasar del límite) ([#492]({{repo}}/pull/492)). |
+| Espera | `select`, `pselect`, `poll` y `ppoll` para todos los procesos (ya no existe el antiguo límite de 25 procesos a la vez), `POLLNVAL`. `pselect`, `pollts`/`ppoll` y `paccept` cambian la máscara de señales de forma atómica: una señal capturada entre medias hace que la llamada falle con `EINTR` en vez de bloquearse ([#500]({{repo}}/pull/500)). `kqueue`/`kevent` con los filtros de lectura, escritura, vnode, temporizador y usuario. |
 | Control de trabajos | Sesiones, grupos de procesos, un estado de parada real (`SIGSTOP`, `SIGTSTP`, `SIGCONT`), `waitid`, el grupo de primer plano del terminal con `SIGTTIN`/`SIGTTOU`, y control de trabajos en `/bin/sh` (`fg`, `bg`, `Ctrl-Z`). |
 
 Para saber qué servidor implementa cada llamada, mira la
@@ -76,7 +76,7 @@ Para saber qué servidor implementa cada llamada, mira la
 Las listas de fallos conocidos son el resumen honesto. Las dos están en el
 árbol:
 [`qemutest-posix.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-posix.xfail)
-(74 entradas, 11 de ellas marcadas como inestables) y
+(67 entradas, 11 de ellas marcadas como inestables) y
 [`qemutest-pjdfstest.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-pjdfstest.xfail)
 (8 entradas). Por categorías:
 
@@ -93,9 +93,6 @@ Las listas de fallos conocidos son el resumen honesto. Las dos están en el
 
 - *Cambio de hora.* Fallan seis pruebas de `clock_settime`, además de
   `clock/2-1` y `clock_nanosleep/13-1`.
-- *Bloqueo de memoria.* `mlock` y `mlockall` comprueban sus argumentos pero
-  no fijan páginas, así que fallan las pruebas que esperan `EBUSY` o `EAGAIN`
-  de la memoria bloqueada.
 - *Colas de mensajes y semáforos.* Algunos casos límite de envío y recepción
   con plazo y de borrado (`mq_timedsend/5-*`, `mq_timedreceive/5-1`,
   `sem_unlink/4-1`...).
