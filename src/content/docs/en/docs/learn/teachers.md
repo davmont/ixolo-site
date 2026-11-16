@@ -144,7 +144,8 @@ students.
 - **Then rebuild only what changed.** After the first full build, students
   who modify one server or driver only rebuild that part and a new image.
 - **Debugging.** There is no gdb or lldb in the system. Students debug with
-  `printf`, the kernel log, the serial console and the QEMU monitor. Plan
+  `printf`, the kernel log, the serial console, `trace(1)`, and gdb on the
+  host attached to QEMU; see [Debugging](/en/docs/develop/debugging/). Plan
   labs with that in mind.
 - **Not every upstream feature works.** Live update is not available on
   amd64, i386 does not build, and there is no binary package repository.

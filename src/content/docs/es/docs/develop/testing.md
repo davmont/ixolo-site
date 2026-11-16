@@ -197,42 +197,14 @@ tiene utilidades basadas en `qemutest.py` para cuando una prueba no basta:
 Detén los invitados por su PID, nunca con `pkill -f`: también coincide con la shell
 que ejecuta la orden.
 
-## Depuración
+## Depurar un fallo
 
-{{name}} **todavía no tiene depurador**: no hay gdb ni lldb en el árbol. Lo que
-tienes:
-
-- **La consola serie.** La segunda entrada del menú de arranque, *serial
-  console, verbose*, arranca con `console=tty00 verbose=3`: todos los mensajes
-  del núcleo y del arranque van al puerto serie, con más detalle. En QEMU añade
-  `-serial stdio` (o `-serial file:boot.log`).
-- **Volcados de IS.** El servidor de información imprime tablas del sistema
-  cuando pulsas una tecla de función en la consola. La salida va al registro
-  de mensajes del núcleo.
-
-  | Tecla | Volcado |
-  |---|---|
-  | <kbd>F1</kbd> | Tabla de procesos del núcleo |
-  | <kbd>F4</kbd> | Privilegios de los procesos |
-  | <kbd>F6</kbd> | Hooks y políticas de IRQ |
-  | <kbd>F8</kbd> | Estado de VM y mapas de los procesos |
-  | <kbd>Mayús</kbd>+<kbd>F1</kbd> | Tabla de procesos de PM |
-  | <kbd>Mayús</kbd>+<kbd>F3</kbd> | Tabla de procesos de VFS: en qué está bloqueado cada proceso |
-  | <kbd>Mayús</kbd>+<kbd>F4</kbd> | Correspondencia entre dispositivos y drivers |
-  | <kbd>Mayús</kbd>+<kbd>F6</kbd> | Tabla de servicios de RS |
-  | <kbd>Mayús</kbd>+<kbd>F9</kbd> | Procesos con sus trazas de pila |
-
-  En QEMU, envía las teclas con `sendkey f1` en el monitor o con
-  `devtools/keys.py`. `qemutest.py --kernel` lo hace solo cuando una prueba se
-  cuelga.
-- **Símbolos.** Guarda el núcleo sin recortar de la compilación. Para convertir
-  una dirección de un pánico o de un cuelgue en una función:
-  `nm -n obj.amd64/minix/kernel/kernel | awk '$1 <= "ADDR"' | tail -1`
-  (con `ADDR` en la misma forma hexadecimal de 16 dígitos que imprime `nm`).
-- **Traza de llamadas al sistema.** `trace(1)` muestra las llamadas que hace un
-  programa. Se basa en `ptrace`, que aún tiene fallos conocidos (prueba 42).
-- **printf.** Servidores y drivers escriben en la consola con `printf`. Es
-  rudimentario y muchas veces lo más rápido.
+Cuando una prueba se cuelga, `qemutest.py --kernel` guarda los volcados de
+las tablas de procesos que dan las teclas de función (en qué está bloqueado
+cada proceso); cuando falla, guarda los mensajes del núcleo que provocó.
+Para ir más allá, con los mensajes del núcleo, `trace(1)`, las trazas de un
+pánico y gdb conectado a QEMU, consulta
+[Depuración](/es/docs/develop/debugging/).
 
 ## Para saber más
 
