@@ -41,11 +41,16 @@ export const site = {
   },
 
   requirements: {
-    /** What CI tests every change with (qemutest.py's default, 1024 MB).
-     *  The devel snapshot of 2026-11-15 (2696e69599) boots to a login in
-     *  128 MB; at 256 MB the quick suite does not pass (tests 72 and 79
-     *  hang, 74 is killed), though its 128 MB test ramdisk takes half. */
-    ram: '1 GB' as string | null,
+    /** Measured under QEMU/KVM (q35, one CPU) on the devel snapshot of
+     *  2026-11-16 with the live CD's tmpfs fix (davmont/ixolo
+     *  fix/livecd-tmpfs).  setup installs in 72, 80, 96 and 128 MB, and the
+     *  installed system boots from disk at each; at 64 MB pax runs out of
+     *  memory unpacking the base set.  Once installed, or from the CD, the
+     *  system boots and logs in at 56 MB (three boots in three) and runs out
+     *  of memory at 48 MB.  96 MB leaves room over the 72 MB measured.  CI
+     *  tests every change with 1 GB (qemutest.py's default).  Before the fix
+     *  the live CD reserved 112 MB of ramdisks and failed at 128 and 192 MB. */
+    ram: '96 MB' as string | null,
     ramDesktop: null as string | null,
     /** setup needs 3 MB + the sets + a 128 MB root: 1 046 MB on the devel
      *  snapshot of 2026-11-11 (3d1d1d0af1, without on-target clang).  2 GB
