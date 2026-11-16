@@ -82,7 +82,9 @@ Para un proceso que entró en el núcleo con `SYSCALL`, que son casi todos, el
 núcleo busca el puntero de marco en una posición fija de la pila de usuario.
 En amd64 encuentra allí bytes de instrucciones, así que todos los procesos
 muestran la misma traza sin sentido (`0x38001078 0xc3850fc0850b89 (v_rbp … ?)`).
-Para ver dónde está un servidor, usa gdb, más abajo.
+Hasta que el arreglo ([#509]({{repo}}/pull/509)) esté en tu sistema, usa gdb,
+más abajo, para ver dónde está un servidor. Con él, cada proceso muestra su
+propia cadena, que se resuelve como en [Pánicos](#pánicos).
 :::
 
 ## Trazar un programa: trace(1)

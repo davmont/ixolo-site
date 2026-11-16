@@ -78,8 +78,10 @@ kernel: --more--
 For a process that entered the kernel with `SYSCALL`, which is nearly all of
 them, the kernel looks for the frame pointer at a fixed place on the user
 stack. On amd64 it finds instruction bytes instead, so every process shows
-the same meaningless trace (`0x38001078 0xc3850fc0850b89 (v_rbp … ?)`). Use
-gdb, below, to see where a server is.
+the same meaningless trace (`0x38001078 0xc3850fc0850b89 (v_rbp … ?)`).
+Until the fix ([#509]({{repo}}/pull/509)) is in your system, use gdb, below,
+to see where a server is. With it, each process shows its own chain, which
+you resolve as in [Panics](#panics).
 :::
 
 ## Tracing a program: trace(1)
