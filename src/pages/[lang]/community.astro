@@ -2,17 +2,19 @@
 import Page from '../../layouts/Page.astro';
 import { doc } from '../../i18n/ui';
 import { fmt, tokens } from '../../lib/ph';
-import type { Lang } from '../../site.config';
+import { released, type Lang } from '../../site.config';
 import copy from '../../i18n/pages/community';
 
 export const getStaticPaths = () => [{ params: { lang: 'en' } }, { params: { lang: 'es' } }];
 const lang = Astro.params.lang as Lang;
 const c = copy[lang];
-/** '{issues}' -> its URL, or '#' while the token is unset. */
-const link = (u: string) => {
-  const m = u.match(/^\{(\w+)\}$/);
-  return m ? (tokens[m[1]] ?? '#') : u;
-};
+/** 'doc:learn/x' -> that docs page; '{repo}/pull/1' -> with the token
+ *  filled in ('#' while a token is unset); anything else as is. */
+const link = (u: string) =>
+  u.startsWith('doc:') ? doc(lang, u.slice(4))
+  : u.replace(/\{(\w+)\}/g, (m, k) => (k in tokens ? (tokens[k] ?? '#') : m));
+// The release announcement ('{date}') waits for the release.
+const news = c.news.filter(([d]) => released || d !== '{date}');
 ---
 <Page lang={lang} page="community" title={c.title} description={c.description}>
   <section class="section tight">
@@ -52,7 +54,7 @@ const link = (u: string) => {
       <div class="card" id="conduct" style="flex-basis:420px">
         <h3>{c.conductH2}</h3>
         <ul>{c.conduct.map((i) => <li set:html={fmt(i)} />)}</ul>
-        <p class="mono">{c.conductNote}</p>
+        <a class="more" href={c.conductUrl}>{c.conductLink}</a>
       </div>
     </div>
   </section>
@@ -62,11 +64,12 @@ const link = (u: string) => {
       <p class="eyebrow">{c.newsEyebrow}</p>
       <h2 class="h2">{c.newsH2}</h2>
       <div class="stack" style="--gap:12px">
-        {c.news.map(([d, cat, h, p]) => (
+        {news.map(([d, cat, h, p, u]) => (
           <article class="news">
             <p class="mono"><span set:html={fmt(d)} /> · {cat}</p>
             <h3 set:html={fmt(h)} />
             <p class="muted" set:html={fmt(p)} />
+            <a class="more" href={link(u)}>{c.newsMore}</a>
           </article>
         ))}
       </div>

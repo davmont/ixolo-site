@@ -5,12 +5,12 @@ sidebar:
   order: 4
 ---
 
-## Sin publicar — {{name}} {{version}}
+## Sin publicar
 
 :::note
 {{name}} aún no ha publicado ninguna versión. Estas notas describen la rama
 `{{branch}}` en noviembre de 2026 (hasta el [PR #488]({{repo}}/pull/488)) y
-serán las notas de la primera versión. Fecha de publicación: {{date}}.
+serán las notas de la primera versión.
 :::
 
 ### Resumen
@@ -204,7 +204,7 @@ no lo cubren las pruebas automáticas.
 
 - Solo amd64. i386 no compila en `{{branch}}`; ARM no se mantiene desde el
   fork.
-- Probado sobre todo en QEMU/KVM. Máquinas físicas verificadas: {{hardware}}.
+- Probado sobre todo en QEMU/KVM.
 - El instalador, `setup`, solo instala para arranque BIOS, y es lento en un
   disco IDE en QEMU. Ver [Instalar en disco](/es/docs/start/install/).
 - No hay repositorio de paquetes binarios para amd64. `pkg_add` está en el
@@ -231,7 +231,6 @@ no lo cubren las pruebas automáticas.
 | mar. 2026 | Empieza el fork |
 | may. 2026 | amd64 arranca hasta el login (en `master`, [#153]({{repo}}/pull/153)) |
 | jun.–nov. 2026 | Desarrollo en `{{branch}}`, PR [#154]({{repo}}/pull/154) a [#488]({{repo}}/pull/488) |
-| {{date}} | {{name}} {{version}} |
 
 El árbol tiene también su propio
 [`RELEASE_NOTES.md`]({{repo}}/blob/{{branch}}/RELEASE_NOTES.md). Solo cubre de

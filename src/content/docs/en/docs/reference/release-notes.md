@@ -5,12 +5,12 @@ sidebar:
   order: 4
 ---
 
-## Unreleased — {{name}} {{version}}
+## Unreleased
 
 :::note
 {{name}} has not had a release yet. These notes describe the `{{branch}}`
 branch as of November 2026 (up to [PR #488]({{repo}}/pull/488)) and will
-become the notes of the first release. Release date: {{date}}.
+become the notes of the first release.
 :::
 
 ### Summary
@@ -188,7 +188,7 @@ by the automated tests.
 
 - amd64 only. i386 does not build on `{{branch}}`; ARM has not been
   maintained since the fork.
-- Tested mainly in QEMU/KVM. Physical machines verified: {{hardware}}.
+- Tested mainly in QEMU/KVM.
 - The installer, `setup`, installs for BIOS only, and is slow on an IDE
   disk under QEMU. See [Install to disk](/en/docs/start/install/).
 - No binary package repository for amd64. `pkg_add` is in the base system;
@@ -214,7 +214,6 @@ by the automated tests.
 | Mar 2026 | The fork starts |
 | May 2026 | amd64 boots to a login prompt (on `master`, [#153]({{repo}}/pull/153)) |
 | Jun–Nov 2026 | Development on `{{branch}}`, PRs [#154]({{repo}}/pull/154) to [#488]({{repo}}/pull/488) |
-| {{date}} | {{name}} {{version}} |
 
 The tree also has its own
 [`RELEASE_NOTES.md`]({{repo}}/blob/{{branch}}/RELEASE_NOTES.md). It covers

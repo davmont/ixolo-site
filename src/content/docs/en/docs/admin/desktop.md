@@ -56,7 +56,7 @@ linker, so the port avoids it. The design study behind all this is
 | | Needed |
 |---|---|
 | Firmware | **UEFI** with GOP. In QEMU: OVMF. |
-| Memory | {{ramDesktop}} |
+| Memory | 2 GB is what the commands below use; the minimum has not been measured yet. |
 | Keyboard and mouse | **PS/2** (QEMU's default devices). USB keyboards and mice are not supported. |
 | Graphics | Any card the firmware can drive with GOP. No GPU acceleration is used. |
 | Image | One built with the desktop (see below). |

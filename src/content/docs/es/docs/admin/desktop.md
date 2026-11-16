@@ -58,7 +58,7 @@ El estudio de diseño que hay detrás es
 | | Necesario |
 |---|---|
 | Firmware | **UEFI** con GOP. En QEMU: OVMF. |
-| Memoria | {{ramDesktop}} |
+| Memoria | 2 GB es lo que usan los comandos de abajo; el mínimo aún no se ha medido. |
 | Teclado y ratón | **PS/2** (los dispositivos por defecto de QEMU). Los teclados y ratones USB no están soportados. |
 | Gráficos | Cualquier tarjeta que el firmware pueda manejar con GOP. No se usa aceleración por GPU. |
 | Imagen | Una compilada con el escritorio (ver abajo). |

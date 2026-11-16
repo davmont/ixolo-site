@@ -61,8 +61,8 @@ Research Foundation, ni cuenta con su respaldo.
 ## ¿Funciona en hardware real o solo en máquinas virtuales?
 
 Casi todas las pruebas se hacen en QEMU/KVM, y es la forma recomendada de
-probarlo. Máquinas físicas verificadas hasta ahora: {{hardware}}. Los
-drivers con más probabilidades de funcionar en un PC real son los de
+probarlo. Los informes desde máquinas físicas son bienvenidos en las
+[incidencias]({{issues}}). Los drivers con más probabilidades de funcionar en un PC real son los de
 almacenamiento AHCI, IDE y NVMe, las tarjetas de red Intel e1000, el
 almacenamiento masivo USB y los teclados y ratones PS/2. No hay soporte de
 teclado USB, ni wifi, ni Secure Boot. La lista completa está en los

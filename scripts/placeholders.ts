@@ -3,7 +3,12 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { missing, label } from '../src/lib/ph.ts';
+import { released } from '../src/site.config.ts';
 
+console.log(released
+  ? 'Release mode: release.version is set.\n'
+  : 'Pre-release mode: the site hides the release fields below until\n' +
+    'release.version is set.  The rest still show as [KEY] chips.\n');
 console.log('Unset in src/site.config.ts:');
 for (const k of missing()) console.log(`  ${label(k).padEnd(28)} (${k})`);
 

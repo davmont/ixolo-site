@@ -10,7 +10,8 @@ import { site } from '../site.config.ts';
 const r = site.release;
 const rq = site.requirements;
 
-const iso = r.version ? r.isoName.replace('{version}', r.version) : null;
+// Before the first release the docs and pages use the CI snapshot's name.
+const iso = r.version ? r.isoName.replace('{version}', r.version) : 'minix_amd64.iso';
 
 export const tokens: Record<string, string | null> = {
   name: site.name,
@@ -20,8 +21,8 @@ export const tokens: Record<string, string | null> = {
   repo: site.repo,
   branch: site.repoBranch,
   issues: site.issues,
-  chat: site.chat,
-  mailingList: site.mailingList,
+  discussions: site.discussions,
+  conductEmail: site.conductEmail,
   version: r.version,
   date: r.date,
   iso,
