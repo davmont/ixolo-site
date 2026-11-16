@@ -205,10 +205,8 @@ no lo cubren las pruebas automáticas.
 - Solo amd64. i386 no compila en `{{branch}}`; ARM no se mantiene desde el
   fork.
 - Probado sobre todo en QEMU/KVM. Máquinas físicas verificadas: {{hardware}}.
-- El instalador, `setup`, sigue buscando los conjuntos de instalación en
-  `/i386/binary/sets` y no copia nada de la ISO de amd64. Solo instala para
-  arranque BIOS. En [Instalar en disco](/es/docs/start/install/) están la
-  solución provisional y la alternativa de la imagen de disco.
+- El instalador, `setup`, solo instala para arranque BIOS, y es lento en un
+  disco IDE en QEMU. Ver [Instalar en disco](/es/docs/start/install/).
 - No hay repositorio de paquetes binarios para amd64. `pkg_add` está en el
   sistema base; `pkgin` no.
 - No hay depurador (gdb ni lldb).

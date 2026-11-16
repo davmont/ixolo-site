@@ -15,13 +15,11 @@ sistema instalado.
 - **`setup` instala solo para arranque BIOS.** Escribe una tabla de
   particiones MBR y un bloque de arranque BIOS. Todavía no hay instalación en
   disco para UEFI (ver [BIOS y UEFI](#bios-y-uefi-arranque-desde-disco)).
-- **`setup` tiene un fallo conocido en amd64.** En {{branch}} sigue buscando
-  los conjuntos de instalación en `/i386/binary/sets`, pero la ISO de amd64
-  los guarda en `/amd64/binary/sets`. Tal cual viene, crea los sistemas de
-  ficheros y después no copia nada. La solución del [paso 2](#2-ejecuta-setup)
-  no se ha verificado de principio a fin; mientras no se corrija, la
-  [imagen de disco construida desde el código](#alternativa-construir-una-imagen-de-disco)
-  es la vía probada para tener un sistema en disco.
+- **Usa una ISO reciente.** `setup` funciona en amd64 desde las correcciones
+  del instalador de noviembre de 2026. Con ISO anteriores falla de una de
+  varias maneras: no copia nada; la copia se arrastra durante horas en `q35`;
+  el sistema live se queda sin memoria a medias; o se detiene justo después de
+  copiar, antes de instalar el bloque de arranque.
 - Instalar en un disco físico borra la partición que elijas. Haz copia de
   seguridad antes.
 :::
@@ -43,16 +41,23 @@ pruebas se hacen en QEMU/KVM.
 
 ## Instalar en QEMU
 
-Crea un disco virtual y arranca la ISO con él conectado. La máquina por
-defecto de QEMU (`pc`) pone ambos en la controladora IDE, lo que simplifica
-los nombres de dispositivo: el disco es `c0d0` y el CD, `c0d2`.
+Crea un disco virtual y arranca la ISO con él conectado. Usa la máquina
+`q35`, cuya controladora de disco es AHCI. QEMU conecta a ella las unidades
+`if=ide`, así que los nombres de dispositivo siguen siendo sencillos: el disco
+es `c0d0` y el CD, `c0d2`.
 
 ```sh
 qemu-img create -f qcow2 {{slug}}.qcow2 8G
-qemu-system-x86_64 -enable-kvm -cpu host -m 2G \
+qemu-system-x86_64 -enable-kvm -cpu host -machine q35 -m 2G \
   -drive file={{slug}}.qcow2,format=qcow2,if=ide \
   -cdrom {{iso}} -boot d
 ```
+
+:::note
+No instales con la máquina por defecto, `pc`. Su disco está en la
+controladora IDE emulada, donde {{name}} escribe a solo unos 270 KB/s, y copiar
+los ficheros lleva horas. En `q35` escribe a entre 12 y 15 MB/s.
+:::
 
 Entra como `root` (el sistema live no tiene contraseña) y sigue.
 
@@ -76,12 +81,8 @@ necesitado de una reparación larga. Consulta
 
 ### 2. Ejecuta setup
 
-Por el fallo de rutas de arriba, ejecuta una copia corregida del script. En el
-sistema live `/tmp` es escribible:
-
 ```sh
-sed 's,/i386/binary/sets,/amd64/binary/sets,g' /bin/setup > /tmp/setup
-sh /tmp/setup
+setup
 ```
 
 Pulsa Intro para aceptar la respuesta por defecto. Los pasos son:
@@ -100,7 +101,8 @@ Pulsa Intro para aceptar la respuesta por defecto. Los pasos son:
    defecto.
 7. **Copia de ficheros.** Se desempaquetan los conjuntos en los sistemas de
    ficheros nuevos, se crean los nodos de dispositivo, se instala el bloque
-   de arranque BIOS y se genera `/boot.cfg`.
+   de arranque BIOS y se genera `/boot.cfg`. En QEMU/KVM con `q35`, todo
+   `setup` lleva unos siete minutos, casi todos en este paso.
 8. **Red.** `setup` ejecuta `netconf -p /mnt` para configurar una interfaz;
    ver [Red](/es/docs/admin/network/). Puedes saltarlo y ejecutar `netconf`
    más tarde.
@@ -121,7 +123,7 @@ poweroff
 ```
 
 ```sh
-qemu-system-x86_64 -enable-kvm -cpu host -m 2G \
+qemu-system-x86_64 -enable-kvm -cpu host -machine q35 -m 2G \
   -drive file={{slug}}.qcow2,format=qcow2,if=ide
 ```
 
@@ -156,7 +158,7 @@ tiene contraseña: pon una con `passwd` nada más entrar.
 |---|---|
 | ISO, BIOS | Funciona. |
 | ISO, UEFI (GRUB) | Funciona, en `-machine pc` (IDE) y `-machine q35` (AHCI). |
-| Disco instalado con `setup`, BIOS | MBR, el bloque de arranque `bootxx_minixfs3` y el monitor de arranque de MINIX, como en la imagen de disco. No verificado de principio a fin en amd64 (ver el fallo de `setup` arriba). |
+| Disco instalado con `setup`, BIOS | Funciona: MBR, el bloque de arranque `bootxx_minixfs3` y el monitor de arranque de MINIX, como en la imagen de disco. Probado de principio a fin en QEMU (`q35`) en noviembre de 2026. |
 | Imagen de disco de `amd64_hdimage.sh`, BIOS | Funciona; es como se ha usado el sistema con una raíz MFS escribible. No la cubre la CI. |
 | Imagen GPT de `amd64_gptimage.sh`, UEFI | **Aún no es usable.** GRUB, el núcleo y el montaje de la raíz funcionan, pero [`docs/UEFI_BOOT.md`]({{repo}}/blob/{{branch}}/docs/UEFI_BOOT.md) documenta un bloqueo al final de `/etc/rc`, antes del login, en esta imagen. |
 | Secure Boot | No soportado. |
