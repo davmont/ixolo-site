@@ -41,7 +41,11 @@ export const site = {
   },
 
   requirements: {
-    ram: null as string | null,
+    /** What CI tests every change with (qemutest.py's default, 1024 MB).
+     *  The devel snapshot of 2026-11-15 (2696e69599) boots to a login in
+     *  128 MB; at 256 MB the quick suite does not pass (tests 72 and 79
+     *  hang, 74 is killed), though its 128 MB test ramdisk takes half. */
+    ram: '1 GB' as string | null,
     ramDesktop: null as string | null,
     /** setup needs 3 MB + the sets + a 128 MB root: 1 046 MB on the devel
      *  snapshot of 2026-11-11 (3d1d1d0af1, without on-target clang).  2 GB
