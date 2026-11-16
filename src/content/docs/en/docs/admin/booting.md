@@ -222,9 +222,9 @@ Ctrl-D and the boot carries on as normal.
 :::caution[The menu entry does not work yet]
 The **single user mode** entries pass `bootopts=-s`, but `/etc/rc.minix`
 reads a parameter called `bootopt`, without the final `s`, so in the current
-source those entries boot normally. Until that is fixed, use
-**Edit menu option** and add `bootopt=-s` to the kernel line. This follows
-from the source and has not been tested.
+source those entries boot normally. Until the fix
+([#506]({{repo}}/pull/506)) is in your system, use **Edit menu option** and
+add `bootopt=-s` to the kernel line; that has been tested on the live ISO.
 :::
 
 ## Serial console

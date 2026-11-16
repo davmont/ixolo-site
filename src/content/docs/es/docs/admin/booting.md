@@ -231,9 +231,9 @@ arrancar. Pulsa Ctrl-D y el arranque sigue con normalidad.
 :::caution[La entrada del menú aún no funciona]
 Las entradas **single user mode** pasan `bootopts=-s`, pero `/etc/rc.minix`
 lee un parámetro llamado `bootopt`, sin la `s` final, así que con el código
-actual esas entradas arrancan con normalidad. Mientras no se corrija, usa
-**Edit menu option** y añade `bootopt=-s` a la línea del núcleo. Esto se
-deduce del código fuente y no se ha probado.
+actual esas entradas arrancan con normalidad. Hasta que tu sistema tenga la
+corrección ([#506]({{repo}}/pull/506)), usa **Edit menu option** y añade
+`bootopt=-s` a la línea del núcleo; está probado en la ISO live.
 :::
 
 ## Consola serie
