@@ -1,13 +1,13 @@
 ---
 title: "amd64 SMP — implementation notes"
-source: "https://github.com/davmont/minix/blob/devel/minix/kernel/arch/x86_64/SMP_NOTES.md"
-editUrl: "https://github.com/davmont/minix/blob/devel/minix/kernel/arch/x86_64/SMP_NOTES.md"
+source: "https://github.com/davmont/ixolo/blob/devel/minix/kernel/arch/x86_64/SMP_NOTES.md"
+editUrl: "https://github.com/davmont/ixolo/blob/devel/minix/kernel/arch/x86_64/SMP_NOTES.md"
 sidebar:
   order: 1
 ---
 
 :::note[Generated from the source tree]
-This page is a copy of [`minix/kernel/arch/x86_64/SMP_NOTES.md`](https://github.com/davmont/minix/blob/devel/minix/kernel/arch/x86_64/SMP_NOTES.md) on the `devel` branch.
+This page is a copy of [`minix/kernel/arch/x86_64/SMP_NOTES.md`](https://github.com/davmont/ixolo/blob/devel/minix/kernel/arch/x86_64/SMP_NOTES.md) on the `devel` branch.
 Edit it there; `npm run sync-docs` refreshes this copy.
 :::
 

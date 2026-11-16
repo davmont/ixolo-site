@@ -1,7 +1,7 @@
 # Ixolo website and documentation
 
 The public site for Ixolo, the MINIX 3 derived OS developed in
-[davmont/minix](https://github.com/davmont/minix) (branch `devel`). It is
+[davmont/ixolo](https://github.com/davmont/ixolo) (branch `devel`). It is
 built with [Astro](https://astro.build) and
 [Starlight](https://starlight.astro.build), and outputs a static site that any
 web server can host.

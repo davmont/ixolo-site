@@ -47,7 +47,7 @@ page and `ci.yml` disagree, `ci.yml` is right.
 
 ```sh
 git clone {{repo}}.git
-cd minix
+cd ixolo
 git checkout {{branch}}
 ```
 

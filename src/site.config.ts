@@ -16,10 +16,10 @@ export const site = {
   domain: 'www.ixolo.org' as string | null,
   maintainer: 'David Montero',
 
-  repo: 'https://github.com/davmont/minix',
+  repo: 'https://github.com/davmont/ixolo',
   repoBranch: 'devel',
-  issues: 'https://github.com/davmont/minix/issues',
-  ci: 'https://github.com/davmont/minix/actions/workflows/ci.yml',
+  issues: 'https://github.com/davmont/ixolo/issues',
+  ci: 'https://github.com/davmont/ixolo/actions/workflows/ci.yml',
 
   /** Community channels (Comunidad page). */
   chat: null as string | null,

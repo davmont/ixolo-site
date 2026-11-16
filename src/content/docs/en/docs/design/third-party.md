@@ -1,13 +1,13 @@
 ---
 title: "Third-party software: inventory, upgrade process, display-stack decision"
-source: "https://github.com/davmont/minix/blob/devel/docs/THIRD_PARTY.md"
-editUrl: "https://github.com/davmont/minix/blob/devel/docs/THIRD_PARTY.md"
+source: "https://github.com/davmont/ixolo/blob/devel/docs/THIRD_PARTY.md"
+editUrl: "https://github.com/davmont/ixolo/blob/devel/docs/THIRD_PARTY.md"
 sidebar:
   order: 9
 ---
 
 :::note[Generated from the source tree]
-This page is a copy of [`docs/THIRD_PARTY.md`](https://github.com/davmont/minix/blob/devel/docs/THIRD_PARTY.md) on the `devel` branch.
+This page is a copy of [`docs/THIRD_PARTY.md`](https://github.com/davmont/ixolo/blob/devel/docs/THIRD_PARTY.md) on the `devel` branch.
 Edit it there; `npm run sync-docs` refreshes this copy.
 :::
 

@@ -10,7 +10,7 @@ const lang = Astro.params.lang as Lang;
 const c = copy[lang];
 const r = site.release;
 const build = `git clone ${site.repo}.git
-cd minix
+cd ixolo
 git checkout ${site.repoBranch}
 sh build.sh -m amd64 -U -u -j$(nproc) -O obj.amd64 -V MKLLVMCMDS=no release
 OBJ=obj.amd64 CREATE_IMAGE_ONLY=1 IMG=${text('iso')} \\

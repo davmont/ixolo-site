@@ -1,13 +1,13 @@
 ---
 title: "MFS version 4 — design"
-source: "https://github.com/davmont/minix/blob/devel/minix/fs/mfs/MFSV4_DESIGN.md"
-editUrl: "https://github.com/davmont/minix/blob/devel/minix/fs/mfs/MFSV4_DESIGN.md"
+source: "https://github.com/davmont/ixolo/blob/devel/minix/fs/mfs/MFSV4_DESIGN.md"
+editUrl: "https://github.com/davmont/ixolo/blob/devel/minix/fs/mfs/MFSV4_DESIGN.md"
 sidebar:
   order: 3
 ---
 
 :::note[Generated from the source tree]
-This page is a copy of [`minix/fs/mfs/MFSV4_DESIGN.md`](https://github.com/davmont/minix/blob/devel/minix/fs/mfs/MFSV4_DESIGN.md) on the `devel` branch.
+This page is a copy of [`minix/fs/mfs/MFSV4_DESIGN.md`](https://github.com/davmont/ixolo/blob/devel/minix/fs/mfs/MFSV4_DESIGN.md) on the `devel` branch.
 Edit it there; `npm run sync-docs` refreshes this copy.
 :::
 

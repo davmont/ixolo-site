@@ -1,13 +1,13 @@
 ---
 title: "Running Wayland on MINIX — feasibility and roadmap"
-source: "https://github.com/davmont/minix/blob/devel/docs/WAYLAND.md"
-editUrl: "https://github.com/davmont/minix/blob/devel/docs/WAYLAND.md"
+source: "https://github.com/davmont/ixolo/blob/devel/docs/WAYLAND.md"
+editUrl: "https://github.com/davmont/ixolo/blob/devel/docs/WAYLAND.md"
 sidebar:
   order: 7
 ---
 
 :::note[Generated from the source tree]
-This page is a copy of [`docs/WAYLAND.md`](https://github.com/davmont/minix/blob/devel/docs/WAYLAND.md) on the `devel` branch.
+This page is a copy of [`docs/WAYLAND.md`](https://github.com/davmont/ixolo/blob/devel/docs/WAYLAND.md) on the `devel` branch.
 Edit it there; `npm run sync-docs` refreshes this copy.
 :::
 

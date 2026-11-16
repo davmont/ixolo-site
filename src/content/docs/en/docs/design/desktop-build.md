@@ -1,17 +1,17 @@
 ---
 title: "Building the LXQt/Qt6 desktop into an image"
-source: "https://github.com/davmont/minix/blob/devel/releasetools/DESKTOP.md"
-editUrl: "https://github.com/davmont/minix/blob/devel/releasetools/DESKTOP.md"
+source: "https://github.com/davmont/ixolo/blob/devel/releasetools/DESKTOP.md"
+editUrl: "https://github.com/davmont/ixolo/blob/devel/releasetools/DESKTOP.md"
 sidebar:
   order: 8
 ---
 
 :::note[Generated from the source tree]
-This page is a copy of [`releasetools/DESKTOP.md`](https://github.com/davmont/minix/blob/devel/releasetools/DESKTOP.md) on the `devel` branch.
+This page is a copy of [`releasetools/DESKTOP.md`](https://github.com/davmont/ixolo/blob/devel/releasetools/DESKTOP.md) on the `devel` branch.
 Edit it there; `npm run sync-docs` refreshes this copy.
 :::
 
-The MINIX desktop (wlcompd + LXQt on Qt 6, software-rendered over Wayland) is an
+The Ixolo desktop (wlcompd + LXQt on Qt 6, software-rendered over Wayland) is an
 **out-of-tree** stack: glib, D-Bus, Qt 6, KDE Frameworks bits and the LXQt
 components are CMake/meson/autotools packages, not part of the reachover world.
 So a normal `build.sh release` builds the compositor (`wlcompd`/`wlclient`, which
