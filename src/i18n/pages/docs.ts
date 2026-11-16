@@ -18,6 +18,7 @@ export const groups: Group[] = [
     id: 'admin', en: ['Administer', 'Running {name} for real.'], es: ['Administrar', 'Para poner {name} en producción.'],
     items: [
       ['admin/services', 'Services and the Reincarnation Server', 'Servicios y el Reincarnation Server'],
+      ['admin/booting', 'Booting and shutting down', 'Arranque y apagado'],
       ['admin/filesystems', 'File systems: MFS v4, ext4, FAT, exFAT', 'Sistemas de ficheros: MFS v4, ext4, FAT, exFAT'],
       ['admin/network', 'Networking', 'Red'],
       ['admin/security', 'Security', 'Seguridad'],

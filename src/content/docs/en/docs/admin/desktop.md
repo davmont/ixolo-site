@@ -2,7 +2,7 @@
 title: "Wayland desktop (experimental)"
 description: "The wlcompd compositor with LXQt and Qt 6: what it needs, how to get it, how to start it, and what does not work yet."
 sidebar:
-  order: 5
+  order: 6
 ---
 
 :::caution[Experimental]

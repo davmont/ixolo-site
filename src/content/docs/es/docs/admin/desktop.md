@@ -2,7 +2,7 @@
 title: "Escritorio Wayland (experimental)"
 description: "El compositor wlcompd con LXQt y Qt 6: qué necesita, cómo conseguirlo, cómo arrancarlo y qué no funciona todavía."
 sidebar:
-  order: 5
+  order: 6
 ---
 
 :::caution[Experimental]

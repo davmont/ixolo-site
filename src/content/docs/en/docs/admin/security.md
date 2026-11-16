@@ -2,7 +2,7 @@
 title: "Security"
 description: "The security model, the hardening on amd64, what is still missing, and how to report a vulnerability."
 sidebar:
-  order: 4
+  order: 5
 ---
 
 This page describes what protects a {{name}} system today, on amd64, and

@@ -39,7 +39,8 @@ In a virtual machine without a screen, use the serial console (see
   disk image's menu has a **legacy PIC mode** entry. On the ISO, choose
   **Edit menu option**, then the entry's number: its command line appears
   after `>`, ready to edit, and Enter boots it. Change `no_apic=0` to
-  `no_apic=1`. The change lasts for that boot only.
+  `no_apic=1`. The change lasts for that boot only; see
+  [Booting and shutting down](/en/docs/admin/booting/) for the other options.
 - **Too much output.** The ISO's **Ixolo (serial console, verbose)** entry
   sets `verbose=3`, which makes the kernel print a line for every entry into
   it. That is for kernel debugging: the boot slows to a crawl and may seem to

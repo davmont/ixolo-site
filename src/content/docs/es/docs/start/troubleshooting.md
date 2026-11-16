@@ -42,7 +42,8 @@ quedó colgado. En una máquina virtual sin pantalla, usa la consola serie
   En la ISO, elige **Edit menu option** y después el número de la entrada:
   su línea de órdenes aparece tras `>`, lista para editar, e Intro la
   arranca. Cambia `no_apic=0` por `no_apic=1`. El cambio dura solo ese
-  arranque.
+  arranque; las demás opciones están en
+  [Arranque y apagado](/es/docs/admin/booting/).
 - **Demasiada salida.** La entrada **Ixolo (serial console, verbose)** de la
   ISO pone `verbose=3`, con lo que el núcleo escribe una línea cada vez que
   se entra en él. Sirve para depurar el núcleo: el arranque se vuelve
