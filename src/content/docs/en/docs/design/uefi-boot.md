@@ -1,13 +1,13 @@
 ---
 title: "UEFI boot support for MINIX 3 / Atomix (hybrid BIOS + UEFI CD)"
-source: "https://github.com/davmont/minix/blob/devel/docs/UEFI_BOOT.md"
-editUrl: "https://github.com/davmont/minix/blob/devel/docs/UEFI_BOOT.md"
+source: "https://github.com/davmont/ixolo/blob/devel/docs/UEFI_BOOT.md"
+editUrl: "https://github.com/davmont/ixolo/blob/devel/docs/UEFI_BOOT.md"
 sidebar:
   order: 6
 ---
 
 :::note[Generated from the source tree]
-This page is a copy of [`docs/UEFI_BOOT.md`](https://github.com/davmont/minix/blob/devel/docs/UEFI_BOOT.md) on the `devel` branch.
+This page is a copy of [`docs/UEFI_BOOT.md`](https://github.com/davmont/ixolo/blob/devel/docs/UEFI_BOOT.md) on the `devel` branch.
 Edit it there; `npm run sync-docs` refreshes this copy.
 :::
 

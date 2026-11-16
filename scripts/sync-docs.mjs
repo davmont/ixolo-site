@@ -10,7 +10,7 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const REPO = 'davmont/minix';
+const REPO = 'davmont/ixolo';
 const BRANCH = process.env.MINIX_BRANCH ?? 'devel';
 const LOCAL = process.env.MINIX_SRC;
 

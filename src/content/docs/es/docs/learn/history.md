@@ -85,7 +85,8 @@ antiguo con un compilador moderno en el anfitrión es complicado.
 ## El fork de 2026, y {{name}}
 
 En marzo de 2026 David Montero ({{maintainer}}) hizo un fork del
-repositorio de upstream en GitHub, `davmont/minix`. El objetivo era llevar
+repositorio de upstream en GitHub, `davmont/minix`, que en noviembre de 2026
+pasó a llamarse `davmont/ixolo`. El objetivo era llevar
 el sistema a los PC de 64 bits sin renunciar a lo que lo hace interesante
 para estudiar: el núcleo pequeño, los drivers aislados y la
 autorreparación.

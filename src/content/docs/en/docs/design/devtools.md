@@ -1,13 +1,13 @@
 ---
 title: "Developer tools for testing MINIX images under QEMU"
-source: "https://github.com/davmont/minix/blob/devel/releasetools/devtools/README.md"
-editUrl: "https://github.com/davmont/minix/blob/devel/releasetools/devtools/README.md"
+source: "https://github.com/davmont/ixolo/blob/devel/releasetools/devtools/README.md"
+editUrl: "https://github.com/davmont/ixolo/blob/devel/releasetools/devtools/README.md"
 sidebar:
   order: 10
 ---
 
 :::note[Generated from the source tree]
-This page is a copy of [`releasetools/devtools/README.md`](https://github.com/davmont/minix/blob/devel/releasetools/devtools/README.md) on the `devel` branch.
+This page is a copy of [`releasetools/devtools/README.md`](https://github.com/davmont/ixolo/blob/devel/releasetools/devtools/README.md) on the `devel` branch.
 Edit it there; `npm run sync-docs` refreshes this copy.
 :::
 

@@ -50,7 +50,7 @@ página y `ci.yml` no coinciden, manda `ci.yml`.
 
 ```sh
 git clone {{repo}}.git
-cd minix
+cd ixolo
 git checkout {{branch}}
 ```
 

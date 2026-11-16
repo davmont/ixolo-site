@@ -82,9 +82,9 @@ modern host compiler is hard.
 ## The 2026 fork, and {{name}}
 
 In March 2026 David Montero ({{maintainer}}) forked the upstream repository
-as `davmont/minix` on GitHub. The aim was to bring the system to 64-bit PCs
-without giving up what makes it worth studying: the small kernel, the
-isolated drivers and the self-repair.
+as `davmont/minix` on GitHub, renamed `davmont/ixolo` in November 2026. The
+aim was to bring the system to 64-bit PCs without giving up what makes it
+worth studying: the small kernel, the isolated drivers and the self-repair.
 
 | Date (2026) | Milestone |
 |---|---|
