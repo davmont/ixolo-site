@@ -2,7 +2,7 @@
 title: "Preguntas frecuentes"
 description: "Respuestas breves sobre {{name}}: su relación con MINIX 3 y Linux, el nombre, la licencia, el hardware, el software y dónde pedir ayuda."
 sidebar:
-  order: 4
+  order: 5
 ---
 
 ## ¿Qué es {{name}}, comparado con MINIX 3 y Linux?

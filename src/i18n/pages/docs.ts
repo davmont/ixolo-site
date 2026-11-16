@@ -10,6 +10,7 @@ export const groups: Group[] = [
       ['start/quickstart', 'From zero to login in 15 minutes', 'De cero a login en 15 minutos'],
       ['start/install', 'Install to disk', 'Instalar en disco'],
       ['start/shell-packages', 'The shell and software', 'La shell y el software'],
+      ['start/troubleshooting', 'Troubleshooting', 'Solución de problemas'],
       ['start/faq', 'Frequently asked questions', 'Preguntas frecuentes'],
     ],
   },
