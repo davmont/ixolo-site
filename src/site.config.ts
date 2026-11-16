@@ -22,7 +22,7 @@ export const site = {
   ci: 'https://github.com/davmont/ixolo/actions/workflows/ci.yml',
 
   /** Community channels (Comunidad page). */
-  discussions: 'https://github.com/davmont/minix/discussions',
+  discussions: 'https://github.com/davmont/ixolo/discussions',
   /** Private reports under the code of conduct (Contributor Covenant 2.1). */
   conductEmail: 'conduct@ixolo.org',
 
