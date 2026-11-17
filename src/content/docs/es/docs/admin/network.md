@@ -2,7 +2,7 @@
 title: "Red"
 description: "Drivers de red, DHCP y direcciones fijas, IPv6, DNS, el servidor lwIP, SSH y certificados TLS."
 sidebar:
-  order: 3
+  order: 4
 ---
 
 La red en {{name}} son tres tipos de proceso de usuario que se hablan por

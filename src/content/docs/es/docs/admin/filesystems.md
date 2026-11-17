@@ -2,7 +2,7 @@
 title: "Sistemas de ficheros"
 description: "MFS v4 con journaling, ext2/3/4, FAT, exFAT, ISO 9660, tmpfs y cómo montarlos."
 sidebar:
-  order: 2
+  order: 3
 ---
 
 Cada sistema de ficheros de {{name}} es un proceso servidor aparte. Cuando

@@ -2,7 +2,7 @@
 title: "Seguridad"
 description: "El modelo de seguridad, el endurecimiento en amd64, lo que falta todavía y cómo informar de una vulnerabilidad."
 sidebar:
-  order: 4
+  order: 5
 ---
 
 Esta página describe qué protege hoy a un sistema {{name}} en amd64 y qué no

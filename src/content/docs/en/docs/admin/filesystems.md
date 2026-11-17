@@ -2,7 +2,7 @@
 title: "File systems"
 description: "MFS v4 with journaling, ext2/3/4, FAT, exFAT, ISO 9660, tmpfs, and how to mount them."
 sidebar:
-  order: 2
+  order: 3
 ---
 
 Each file system in {{name}} is a separate server process. When you mount a

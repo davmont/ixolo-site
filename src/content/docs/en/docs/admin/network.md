@@ -2,7 +2,7 @@
 title: "Networking"
 description: "Network drivers, DHCP and static addresses, IPv6, DNS, the lwIP server, SSH and TLS certificates."
 sidebar:
-  order: 3
+  order: 4
 ---
 
 Networking in {{name}} is three kinds of user process talking by messages:
