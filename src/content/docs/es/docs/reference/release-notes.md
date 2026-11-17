@@ -9,7 +9,7 @@ sidebar:
 
 :::note
 {{name}} aún no ha publicado ninguna versión. Estas notas describen la rama
-`{{branch}}` en noviembre de 2026 (hasta el [PR #491]({{repo}}/pull/491)) y
+`{{branch}}` en noviembre de 2026 (hasta el [PR #504]({{repo}}/pull/504)) y
 serán las notas de la primera versión.
 :::
 
@@ -47,6 +47,16 @@ no lo cubren las pruebas automáticas.
 - La CPU debe tener `FSGSBASE`. NX, SMEP, SMAP y PCID se usan si están.
 - `setup` encuentra los conjuntos de instalación en la ISO de amd64 y se
   detiene si un conjunto no se extrae ([#489]({{repo}}/pull/489)).
+- `setup` instala un sistema arrancable en amd64: el MBR y el código de
+  arranque BIOS se compilan para amd64, y VM ya no pierde una página cada vez
+  que carga una página que ya estaba presente ([#497]({{repo}}/pull/497)).
+- El servicio ACPI lee tablas de enrutado de interrupciones PCI de cualquier
+  tamaño, así que AHCI ya no pierde interrupciones en la máquina `q35` de
+  QEMU ([#496]({{repo}}/pull/496)).
+- El sistema se llama {{name}} 0.1.0 en los menús de arranque, el mensaje
+  inicial del núcleo, el instalador, `/etc/motd` y `uname -v`, y tiene un
+  `/etc/os-release`; `uname -s` y `uname -r` siguen siendo `Minix` y `3.4.0`
+  ([#494]({{repo}}/pull/494)).
 
 ### Multiprocesador (SMP)
 
@@ -83,6 +93,8 @@ no lo cubren las pruebas automáticas.
 - Como mucho 65530 proyecciones por proceso de usuario, y un `mmap` con
   `MAP_FIXED` que no cabe falla con `ENOMEM` en vez de deshacer proyecciones
   ([#490]({{repo}}/pull/490)).
+- `mlock` y `mlockall` fijan páginas en memoria, y se aplica
+  `RLIMIT_MEMLOCK` ([#492]({{repo}}/pull/492)).
 - *Experimental:* swap en disco en el núcleo y VM
   ([#299]({{repo}}/pull/299), [#300]({{repo}}/pull/300),
   [#310]({{repo}}/pull/310)). Todavía no hay herramienta `swapon` para
@@ -125,6 +137,8 @@ no lo cubren las pruebas automáticas.
 - AHCI, e IDE con una corrección para discos de más de 2 TB
   ([#274]({{repo}}/pull/274)).
 - Un dispositivo framebuffer, `/dev/fb0`, con UEFI.
+- Los drivers de disco leen tablas de particiones GPT cuando el MBR es solo
+  de protección, hasta cuatro particiones ([#502]({{repo}}/pull/502)).
 - El driver de red probado es e1000. Los demás drivers de red, los de audio y
   `virtio_blk` compilan para amd64, pero no se han probado en esa
   arquitectura.
@@ -156,6 +170,12 @@ no lo cubren las pruebas automáticas.
   [#474]({{repo}}/pull/474)), sincronización entre procesos
   ([#479]({{repo}}/pull/479)), cancelación de hilos
   ([#481]({{repo}}/pull/481), [#488]({{repo}}/pull/488)).
+- `clock_gettime` y `gettimeofday` leen el TSC entre ticks sin llamada al
+  sistema; los plazos y temporizadores nunca vencen antes de tiempo; los
+  temporizadores POSIX cuentan en nanosegundos ([#493]({{repo}}/pull/493)).
+- `dup2` y `dup3` atómicas ([#499]({{repo}}/pull/499)); `pselect`, `pollts`
+  y `paccept` atómicas ([#500]({{repo}}/pull/500)); `SEM_UNDO` para los
+  semáforos de System V ([#501]({{repo}}/pull/501)).
 - Open POSIX Test Suite: pasan {{posixPassed}} de {{posixTotal}} pruebas;
   pjdfstest: {{pjdfstestPassed}} de {{pjdfstestTotal}}. Detalles en la
   [página de POSIX](/es/docs/reference/posix/).
@@ -191,6 +211,10 @@ no lo cubren las pruebas automáticas.
   [inventario de terceros](/es/docs/design/third-party/).
 - Las páginas de manual van en la ISO ([#165]({{repo}}/pull/165)); nueva
   orden `free(1)` ([#225]({{repo}}/pull/225)).
+- Las compilaciones con el clang 22 del anfitrión (`build.sh -c clang-22`)
+  enlazan con `ld.lld` ([#494]({{repo}}/pull/494)), y sus programas
+  dinámicos usan `/usr/libexec/ld.elf_so` como intérprete, así que se
+  ejecutan en el sistema destino ([#498]({{repo}}/pull/498)).
 
 ### Escritorio (experimental)
 
@@ -200,6 +224,8 @@ no lo cubren las pruebas automáticas.
 - Opcional: se compila fuera del árbol, necesita UEFI, no está en la ISO por
   defecto y la CI no lo prueba. Mira la
   [guía del escritorio](/es/docs/admin/desktop/).
+- Páginas de manual de `wlcompd(8)`, `fbcompd(8)`, `wlclient(1)`,
+  `wlprobe(1)` y `wlcoreprobe(1)` ([#503]({{repo}}/pull/503)).
 
 ### Pruebas
 
@@ -224,8 +250,8 @@ no lo cubren las pruebas automáticas.
   no funciona en amd64: su prueba es un fallo conocido.
 - No hay herramienta para activar el swap; no se admiten teclados ni ratones
   USB; no hay UEFI Secure Boot.
-- El árbol sigue llamándose MINIX 3, versión 3.4.0 (menú de arranque,
-  `uname`).
+- Las entradas de GRUB que escribe `amd64_hdimage.sh` para una partición
+  EFI siguen diciendo «Minix Boot».
 
 ## Linaje
 
@@ -239,11 +265,12 @@ no lo cubren las pruebas automáticas.
 | nov. 2018 | Último commit de MINIX original, `4db99f4`: la base del fork |
 | mar. 2026 | Empieza el fork |
 | may. 2026 | amd64 arranca hasta el login (en `master`, [#153]({{repo}}/pull/153)) |
-| jun.–nov. 2026 | Desarrollo en `{{branch}}`, PR [#154]({{repo}}/pull/154) a [#491]({{repo}}/pull/491) |
+| jun.–nov. 2026 | Desarrollo en `{{branch}}`, PR [#154]({{repo}}/pull/154) a [#504]({{repo}}/pull/504) |
 
 El árbol tiene también su propio
-[`RELEASE_NOTES.md`]({{repo}}/blob/{{branch}}/RELEASE_NOTES.md). Solo cubre de
-marzo a principios de junio de 2026 y no se ha actualizado desde entonces.
-Estas notas lo sustituyen para todo lo posterior.
+[`RELEASE_NOTES.md`]({{repo}}/blob/{{branch}}/RELEASE_NOTES.md). Aparte de
+una entrada sobre el cambio de nombre a {{name}} 0.1.0 (noviembre de 2026),
+solo cubre de marzo a principios de junio de 2026. Estas notas lo sustituyen
+para todo lo posterior.
 
 Para la historia completa, mira [historia](/es/docs/learn/history/).

@@ -108,6 +108,20 @@ See also the [file systems guide](/en/docs/admin/filesystems/).
 | [`trace(1)`]({{repo}}/blob/{{branch}}/minix/usr.bin/trace/trace.1) | Print a process's system calls and signals. It uses `ptrace(2)`, which still has known failures on amd64 (test 42). |
 | [`hier(7)`]({{repo}}/blob/{{branch}}/minix/man/man7/hier.7) | The file system layout. |
 
+### Desktop
+
+New in {{name}} ([#503]({{repo}}/pull/503)).
+
+| Page | What it covers |
+|---|---|
+| [`wlcompd(8)`]({{repo}}/blob/{{branch}}/minix/commands/wlcompd/wlcompd.8) | The Wayland compositor: draws on `/dev/fb0`, takes keyboard and mouse input, and serves clients on `$XDG_RUNTIME_DIR/wayland-N`. |
+| [`fbcompd(8)`]({{repo}}/blob/{{branch}}/minix/commands/fbcompd/fbcompd.8) | The older proof-of-concept framebuffer compositor, which predates `wlcompd` and does not speak Wayland. |
+| [`wlclient(1)`]({{repo}}/blob/{{branch}}/minix/commands/wlclient/wlclient.1) | A small Wayland client that checks the stack from end to end against `wlcompd`. |
+| [`wlprobe(1)`]({{repo}}/blob/{{branch}}/minix/commands/wlprobe/wlprobe.1) | Checks, step by step, the shared-memory path a Wayland client uses to hand its pixels to the compositor. |
+| [`wlcoreprobe(1)`]({{repo}}/blob/{{branch}}/minix/commands/wlcoreprobe/wlcoreprobe.1) | Checks the libwayland-server event loop on top of the emulated epoll, timerfd, signalfd and eventfd. |
+
+The [desktop guide](/en/docs/admin/desktop/) shows them in use.
+
 ## NetBSD's pages as a reference
 
 Most of the userland and libc come from NetBSD, at different versions: some
@@ -121,8 +135,8 @@ best source:
 Treat those pages as a guide, not a contract. The kernel, the servers and
 much of the system call layer are MINIX's own, so behaviour can differ. Two
 examples: `kqueue(2)` here supports the read, write, vnode, timer and user
-filters but not the signal, process and AIO filters; and `mlock(2)` checks
-its arguments but does not pin pages. When in doubt, the
+filters but not the signal, process and AIO filters; and `poll(2)` is built
+on `select(2)`, so it does not report `POLLHUP`. When in doubt, the
 [system call reference](/en/docs/reference/syscalls/) and the
 [POSIX page](/en/docs/reference/posix/) say what {{name}} does, and the
 source is the final word.

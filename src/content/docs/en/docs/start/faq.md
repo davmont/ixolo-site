@@ -37,10 +37,12 @@ with the MINIX 3 project and its releases. The axolotl regrows lost limbs;
 
 No. Upstream published release candidates of 3.4.0 (the last one in 2017)
 but never a final 3.4.0. {{name}} starts from upstream's last development
-tree (November 2018) and has changed a great deal since. The source tree
-still reports itself as `Minix 3.4.0` in `uname` and the boot menus, because
-the renaming has not reached the code yet. {{name}} is not an official MINIX
-release. The [history](/en/docs/learn/history/) has the details.
+tree (November 2018) and has changed a great deal since. The boot menus,
+the kernel banner and `uname -v` say {{name}} 0.1.0; MINIX 3.4.0 remains the
+name and version of the kernel and of the OS interface, so `uname -s` and
+`uname -r` still report `Minix` and `3.4.0` for the software that checks
+them. {{name}} is not an official MINIX release. The
+[history](/en/docs/learn/history/) has the details.
 
 ## What is the licence?
 

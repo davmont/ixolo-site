@@ -57,15 +57,15 @@ has stayed.
 |---|---|
 | Threads | libpthread on kernel-scheduled threads (`_lwp_*` calls in PM). `fork` from a thread, `pthread_detach`, timed waits, asynchronous and deferred cancellation. Process-shared mutexes, condition variables, rwlocks and barriers. `PTHREAD_PRIO_INHERIT` and `PTHREAD_PRIO_PROTECT` mutexes. |
 | Signals | `SA_SIGINFO` with `ucontext`, `sigaltstack`, `SA_RESTART`, `pthread_kill`, delivery of a process signal to any thread that does not block it. Real-time signals `SIGRTMIN` to `SIGRTMAX`, queued with values: `sigqueue`, `sigwaitinfo`, `sigtimedwait`. |
-| Clocks and timers | `CLOCK_REALTIME`, `CLOCK_MONOTONIC`, process and thread CPU-time clocks, `timer_create` and the other `timer_*` calls, `clock_nanosleep`. Setting the clock no longer disturbs the monotonic clock or timed waits. |
-| IPC | POSIX message queues (`mq_*`), named and process-shared semaphores (up to 256 in the system), `shm_open` as files on a tmpfs at `/var/shm`. System V shared memory and semaphores. |
+| Clocks and timers | `CLOCK_REALTIME`, `CLOCK_MONOTONIC`, process and thread CPU-time clocks, `timer_create` and the other `timer_*` calls, `clock_nanosleep`. Setting the clock no longer disturbs the monotonic clock or timed waits. With an invariant TSC, `clock_gettime` and `gettimeofday` read the two clocks to the nanosecond without a system call ([#493]({{repo}}/pull/493)). Timeouts of `select`, `poll`, `sigtimedwait`, timed waits, `setitimer`/`alarm` and POSIX timers never end early, and at most one tick late (two without the TSC); POSIX timers keep their expiry and interval in nanoseconds. |
+| IPC | POSIX message queues (`mq_*`), named and process-shared semaphores (up to 256 in the system), `shm_open` as files on a tmpfs at `/var/shm`. System V shared memory and semaphores, with `SEM_UNDO` ([#501]({{repo}}/pull/501)). |
 | Asynchronous I/O | `aio_*` and `lio_listio` in `librt`. There is no kernel AIO: a pool of threads does the I/O with `pread` and `pwrite`. Completion signals arrive with `SI_ASYNCIO`. |
 | Scheduling | `sched_*` calls, `SCHED_FIFO` and `SCHED_RR` for root, in a band below the system services. If real-time processes use more than 95% of a CPU, they are throttled so a shell can still kill a runaway. CPU affinity with `sched_setaffinity_np` and `pthread_setaffinity_np`. |
 | File locks | `fcntl` record locks and `flock`. |
 | Path calls | The `*at` family, `O_NOFOLLOW`, `O_DIRECTORY`; a bad path pointer returns `EFAULT`. |
-| Files and I/O | `pread`/`pwrite`, `preadv`/`pwritev`, `posix_fallocate`, `O_SYNC`/`O_DSYNC`, `fdatasync` (a full `fsync`). |
-| Memory | `mmap` with `PROT_*` honoured, `mprotect`, `msync`, writable `MAP_SHARED` file mappings on MFS and tmpfs, `MAP_SHARED` anonymous memory shared across `fork`. |
-| Waiting | `select`, `pselect`, `poll` and `ppoll` for every process (the old limit of 25 processes at once is gone), `POLLNVAL`. `kqueue`/`kevent` with the read, write, vnode, timer and user filters. |
+| Files and I/O | `pread`/`pwrite`, `preadv`/`pwritev`, `posix_fallocate`, `O_SYNC`/`O_DSYNC`, `fdatasync` (a full `fsync`). `dup2` and `dup3` are atomic: another thread cannot get the target descriptor in between ([#499]({{repo}}/pull/499)). |
+| Memory | `mmap` with `PROT_*` honoured, `mprotect`, `msync`, writable `MAP_SHARED` file mappings on MFS and tmpfs, `MAP_SHARED` anonymous memory shared across `fork`. `mlock` and `mlockall` pin pages, up to `RLIMIT_MEMLOCK` (8 MB by default; root may lock past it) ([#492]({{repo}}/pull/492)). |
+| Waiting | `select`, `pselect`, `poll` and `ppoll` for every process (the old limit of 25 processes at once is gone), `POLLNVAL`. `pselect`, `pollts`/`ppoll` and `paccept` change the signal mask atomically: a signal caught in between makes the call fail with `EINTR` instead of blocking ([#500]({{repo}}/pull/500)). `kqueue`/`kevent` with the read, write, vnode, timer and user filters. |
 | Job control | Sessions, process groups, a real stopped state (`SIGSTOP`, `SIGTSTP`, `SIGCONT`), `waitid`, the terminal's foreground process group with `SIGTTIN`/`SIGTTOU`, and job control in `/bin/sh` (`fg`, `bg`, `Ctrl-Z`). |
 
 For which server implements each call, see the
@@ -75,7 +75,7 @@ For which server implements each call, see the
 
 The known-failure lists are the honest summary. Both are in the tree:
 [`qemutest-posix.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-posix.xfail)
-(74 entries, 11 of them marked flaky) and
+(67 entries, 11 of them marked flaky) and
 [`qemutest-pjdfstest.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-pjdfstest.xfail)
 (8 entries). By category:
 
@@ -91,9 +91,6 @@ The known-failure lists are the honest summary. Both are in the tree:
 
 - *Clock setting.* Six `clock_settime` tests fail, plus `clock/2-1` and
   `clock_nanosleep/13-1`.
-- *Memory locking.* `mlock` and `mlockall` check their arguments but do not
-  pin pages, so tests that expect `EBUSY` or `EAGAIN` from locked memory
-  fail.
 - *Message queues and semaphores.* A few timed-send, timed-receive and unlink
   edge cases (`mq_timedsend/5-*`, `mq_timedreceive/5-1`, `sem_unlink/4-1`...).
 - *Threads.* 27 tests in the `pthread_*` groups. Some do not compile,

@@ -164,8 +164,15 @@ tiene contraseña: pon una con `passwd` nada más entrar.
 | Imagen GPT de `amd64_gptimage.sh`, UEFI | **Aún no es usable.** GRUB, el núcleo y el montaje de la raíz funcionan, pero [`docs/UEFI_BOOT.md`]({{repo}}/blob/{{branch}}/docs/UEFI_BOOT.md) documenta un bloqueo al final de `/etc/rc`, antes del login, en esta imagen. |
 | Secure Boot | No soportado. |
 
-El núcleo lee tablas de particiones MBR, no GPT: la imagen GPT funciona
-gracias a un MBR híbrido. Las notas de diseño están en
+Desde noviembre de 2026 los drivers de disco también leen tablas de
+particiones GPT ([#502]({{repo}}/pull/502)). En un disco cuyo MBR es solo de
+protección (una única entrada `0xEE`), `p0` a `p3` son las cuatro primeras
+particiones GPT. Las particiones a partir de la quinta no son accesibles, las
+particiones GPT no admiten subparticiones y solo funcionan los sectores de
+512 bytes. Un MBR híbrido se sigue leyendo como MBR, y así es como la imagen
+GPT de arriba encuentra su raíz. `setup` sigue escribiendo solo tablas MBR,
+y todavía no se puede arrancar un disco GPT con BIOS: el código de arranque
+`gptmbr` no compila en amd64. Las notas de diseño están en
 [Arranque UEFI](/es/docs/design/uefi-boot/).
 
 ## Después del primer arranque

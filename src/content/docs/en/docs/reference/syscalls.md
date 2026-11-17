@@ -49,16 +49,22 @@ asks VM to copy the address space and VFS to copy the descriptor table.
 PM does not decide scheduling itself. It passes these requests to the SCHED
 server, which sets priorities and CPUs through the kernel.
 
+With an invariant TSC, libc answers `clock_gettime` and `gettimeofday` for
+`CLOCK_REALTIME` and `CLOCK_MONOTONIC` without calling PM: it reads the time
+of the last clock tick from a page the kernel shares with every process and
+adds what the TSC has counted since ([#493]({{repo}}/pull/493)). The boot
+option `hirestime=0` turns this off, and every read goes to PM again.
+
 ### VFS: files, descriptors and sockets
 
 | Group | Calls |
 |---|---|
 | Path calls | `openat`, `fstatat`, `mkdirat`, `mknodat`, `unlinkat`, `linkat`, `renameat`, `symlinkat`, `readlinkat`, `fchmodat`, `fchownat`, `faccessat`, `utimensat`. The classic `open`, `stat`, `mkdir`, `unlink`... are these calls with `AT_FDCWD`. |
 | I/O | `read`, `write`, `pread`, `pwrite`, `lseek`, `ioctl`, `getdents` |
-| Descriptors | `close`, `fcntl` (also `dup` and `dup2`), `pipe2`, `umask`, `flock`, record locks through `fcntl` |
+| Descriptors | `close`, `fcntl` (also `dup`; `dup2` and `dup3` use the MINIX-only `F_DUP2FD` commands, so the swap is atomic), `pipe2`, `umask`, `flock`, record locks through `fcntl` |
 | File state | `fstat`, `fchmod`, `fchown`, `truncate`/`ftruncate`, `posix_fallocate`, `fsync` (also `fdatasync`), `sync`, `chflags`/`fchflags`, the `extattr_*` family (and ACLs built on it) |
 | Directories and mounts | `chdir`, `fchdir`, `chroot`, `statvfs1`/`fstatvfs1`, `getvfsstat`; mounting through MINIX's own `minix_mount`/`minix_umount`, which `mount(1)` and `umount(1)` use |
-| Waiting | `select` (and `pselect`), `kqueue1`, `kevent`. libc builds `poll` on top of `select`, and `nanosleep` too. |
+| Waiting | `select` (and `pselect`), `kqueue1`, `kevent`. libc builds `poll` on top of `select`, and `nanosleep` too. `pselect`, `pollts`/`ppoll` and `paccept` first arm the call with `VFS_SIGARM`, so a signal caught before it blocks makes it fail with `EINTR`. |
 | Sockets | `socket`, `socketpair`, `bind`, `connect`, `listen`, `accept` (and `accept4`/`paccept`), `sendto`, `sendmsg`, `recvfrom`, `recvmsg`, `setsockopt`, `getsockopt`, `getsockname`, `getpeername`, `shutdown` |
 
 VFS passes file operations to the file system server that owns the file (MFS,
@@ -76,17 +82,15 @@ mounted on `/var/shm`, so it goes through VFS like any file.
 | `brk`/`sbrk` | The classic heap |
 | `mmap`, `munmap` | Anonymous and file mappings. Writable `MAP_SHARED` file mappings work on MFS and tmpfs; other file systems return `ENODEV`. |
 | `mprotect`, `msync` | New in {{name}} |
-| `getrlimit`/`setrlimit` | VM enforces `RLIMIT_AS` and `RLIMIT_DATA`. libc answers the other limits itself, with fixed values. |
-
-`mlock`, `munlock`, `mlockall` and `munlockall` exist in libc. They check
-their arguments and permissions but do not pin pages.
+| `mlock`, `munlock`, `mlockall`, `munlockall` | Through the `VM_MLOCK` call. Locked pages are brought in and kept resident: reclaim does not compress, swap or evict them ([#492]({{repo}}/pull/492)). |
+| `getrlimit`/`setrlimit` | VM enforces `RLIMIT_AS`, `RLIMIT_DATA` and `RLIMIT_MEMLOCK` (8 MB by default). libc answers the other limits itself, with fixed values. |
 
 ### IPC server: System V and POSIX IPC
 
 | Group | Calls |
 |---|---|
 | System V shared memory | `shmget`, `shmat`, `shmdt`, `shmctl` |
-| System V semaphores | `semget`, `semctl`, `semop` |
+| System V semaphores | `semget`, `semctl`, `semop`, with `SEM_UNDO` ([#501]({{repo}}/pull/501)) |
 | POSIX message queues | `mq_open`, `mq_close`, `mq_unlink`, `mq_send`/`mq_timedsend`, `mq_receive`/`mq_timedreceive`, `mq_getattr`/`mq_setattr`, `mq_notify` |
 | POSIX semaphores | `sem_open`, `sem_close`, `sem_unlink`, and `sem_init` with `pshared` set (process-local semaphores stay in libpthread) |
 | Process-shared pthread objects | Wait queues behind `PTHREAD_PROCESS_SHARED` mutexes, condition variables, rwlocks and barriers |
@@ -118,7 +122,7 @@ calls. They were added on the way to {{name}}:
 | Process control | `waitid`, `setpgid`/`getpgid` with real job control, `setresuid`/`setresgid` |
 | Signals | `sigaltstack`, real-time signals, `sigqueue`, `sigtimedwait` |
 | Timers and scheduling | `timer_*`, CPU-time clocks, `sched_*` with `SCHED_FIFO`/`SCHED_RR`, CPU affinity |
-| Memory | `mprotect`, `msync`, `RLIMIT_AS`/`RLIMIT_DATA` |
+| Memory | `mprotect`, `msync`, `mlock` that pins pages, `RLIMIT_AS`/`RLIMIT_DATA`/`RLIMIT_MEMLOCK` |
 | IPC | POSIX message queues, named and process-shared semaphores, process-shared pthread objects |
 | Library | POSIX AIO in a new `librt` |
 

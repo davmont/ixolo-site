@@ -92,7 +92,7 @@ en el mismo cambio que la arregla. Así las listas no mienten.
 | [`qemutest.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest.xfail) | `quick` | 11 entradas: ptrace (42), `strtoll` y aritmética de 64 bits (45, 53, 66), ptyfs (77), una prueba desfasada (`mfs`), otra sin investigar (`isofs`) y otras inestables |
 | [`qemutest-tcg.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-tcg.xfail) | `quick` con TCG | Pruebas de temporizadores y pruebas lentas que pasan con KVM pero se atascan en un host emulado lento; se combina con la anterior |
 | [`qemutest-pjdfstest.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-pjdfstest.xfail) | `pjdfstest` | 8 scripts: MFS guarda las marcas de tiempo en segundos enteros, y las rutas largas no fallan con `ENAMETOOLONG` como espera POSIX |
-| [`qemutest-posix.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-posix.xfail) | `posix` | 74 entradas, 11 de ellas pruebas de tiempos inestables; cada una dice cómo falló |
+| [`qemutest-posix.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-posix.xfail) | `posix` | 67 entradas, 11 de ellas pruebas de tiempos inestables; cada una dice cómo falló |
 
 ## La Open POSIX Test Suite
 

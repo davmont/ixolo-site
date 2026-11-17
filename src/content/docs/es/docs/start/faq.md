@@ -40,9 +40,11 @@ mascota, un ajolote, se llama Xolo.
 No. Upstream publicó candidatas de la versión 3.4.0 (la última en 2017),
 pero nunca una 3.4.0 definitiva. {{name}} parte del último árbol de
 desarrollo de upstream (noviembre de 2018) y ha cambiado mucho desde
-entonces. El código todavía se presenta como `Minix 3.4.0` en `uname` y en
-los menús de arranque, porque el cambio de nombre aún no ha llegado al
-código. {{name}} no es una versión oficial de MINIX. La
+entonces. Los menús de arranque, el mensaje inicial del núcleo y
+`uname -v` dicen {{name}} 0.1.0; MINIX 3.4.0 sigue siendo el nombre y la
+versión del núcleo y de la interfaz del sistema, así que `uname -s` y
+`uname -r` siguen devolviendo `Minix` y `3.4.0` para el software que los
+comprueba. {{name}} no es una versión oficial de MINIX. La
 [historia](/es/docs/learn/history/) tiene los detalles.
 
 ## ¿Qué licencia tiene?

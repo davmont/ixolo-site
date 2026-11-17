@@ -63,8 +63,9 @@ it, and the kernel panics early in boot with a message asking for `-cpu host`.
 :::
 
 The boot menu waits 10 seconds and then starts the first entry,
-**Regular MINIX 3**. The tree still uses the upstream name in its menus and
-messages.
+**Regular Ixolo**. The kernel then prints `Ixolo 0.1.0 (MINIX 3.4.0 kernel)`
+and `Based on MINIX 3`: {{name}} is the system, and MINIX 3 is still the name
+of its kernel.
 
 ### Boot with UEFI instead of BIOS
 
@@ -111,7 +112,10 @@ login: root
 # uname -a
 ```
 
-`uname` reports `Minix 3.4.0`: the version string has not been changed yet.
+`uname -v` reports `Ixolo 0.1.0 (Minix 3.4.0 GENERIC)`. The system name
+(`uname -s`) is still `Minix` and the release (`uname -r`) still `3.4.0`, on
+purpose: build scripts and packages check for them. `/etc/os-release` names
+{{name}} (`ID=ixolo`, `ID_LIKE=minix`).
 
 ## 5. See it heal
 

@@ -159,8 +159,15 @@ this image: set one with `passwd` straight away.
 | GPT disk image from `amd64_gptimage.sh`, UEFI | **Not usable yet.** GRUB, the kernel and the root mount work, but [`docs/UEFI_BOOT.md`]({{repo}}/blob/{{branch}}/docs/UEFI_BOOT.md) records a stall at the very end of `/etc/rc`, before the login prompt, on this image. |
 | Secure Boot | Not supported. |
 
-The kernel reads MBR partition tables, not GPT: the GPT image works through a
-hybrid MBR. The design notes are in [UEFI boot](/en/docs/design/uefi-boot/).
+Since November 2026 the disk drivers also read GPT partition tables
+([#502]({{repo}}/pull/502)). On a disk whose MBR is only protective (a single
+`0xEE` entry), `p0` to `p3` are the first four GPT partitions. Partitions past
+the fourth cannot be reached, GPT partitions are not subpartitioned, and only
+512-byte sectors work. A hybrid MBR is still read as an MBR, and that is how
+the GPT image above finds its root. `setup` still writes MBR tables only, and
+a GPT disk cannot be booted from BIOS yet: the `gptmbr` boot code does not
+build on amd64. The design notes are in
+[UEFI boot](/en/docs/design/uefi-boot/).
 
 ## After the first boot
 
