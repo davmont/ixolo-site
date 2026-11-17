@@ -2,7 +2,7 @@
 title: "Contributing and code style"
 description: "How to send a change to {{name}}: branches, pull requests, commit messages, code style, ABI rules, licences and third-party code."
 sidebar:
-  order: 4
+  order: 5
 ---
 
 {{name}} is developed in the open at [{{repo}}]({{repo}}). Changes arrive as

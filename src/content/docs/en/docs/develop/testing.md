@@ -195,41 +195,13 @@ has helpers built on `qemutest.py`, for when a test is not enough:
 Stop guests by PID, never with `pkill -f`: it also matches the shell running
 the command.
 
-## Debugging
+## Debugging a failure
 
-There is **no debugger** in {{name}} yet: no gdb or lldb in the tree. The
-tools you have:
-
-- **The serial console.** The second boot menu entry, *serial console,
-  verbose*, boots with `console=tty00 verbose=3`: all kernel and boot messages
-  go to the serial port, with more detail. In QEMU add `-serial stdio`
-  (or `-serial file:boot.log`).
-- **IS dumps.** The information server prints system tables when you press a
-  function key on the console. The output goes to the kernel message log.
-
-  | Key | Dump |
-  |---|---|
-  | <kbd>F1</kbd> | Kernel process table |
-  | <kbd>F4</kbd> | Process privileges |
-  | <kbd>F6</kbd> | IRQ hooks and policies |
-  | <kbd>F8</kbd> | VM status and process maps |
-  | <kbd>Shift</kbd>+<kbd>F1</kbd> | PM process table |
-  | <kbd>Shift</kbd>+<kbd>F3</kbd> | VFS process table: what each process is blocked on |
-  | <kbd>Shift</kbd>+<kbd>F4</kbd> | Device to driver mapping |
-  | <kbd>Shift</kbd>+<kbd>F6</kbd> | RS table of services |
-  | <kbd>Shift</kbd>+<kbd>F9</kbd> | Processes with stack traces |
-
-  In QEMU, send the keys with `sendkey f1` in the monitor or with
-  `devtools/keys.py`. `qemutest.py --kernel` does this automatically when a
-  test hangs.
-- **Symbols.** Keep the unstripped kernel from the build. To turn an address
-  from a panic or a stall into a function:
-  `nm -n obj.amd64/minix/kernel/kernel | awk '$1 <= "ADDR"' | tail -1`
-  (with `ADDR` in the same 16-digit hex form `nm` prints).
-- **System call tracing.** `trace(1)` prints the calls a program makes. It
-  is built on `ptrace`, which still has known failures (test 42).
-- **printf.** Servers and drivers print to the console with `printf`. Crude,
-  and often the fastest way.
+When a test hangs, `qemutest.py --kernel` saves the function-key dumps of
+the process tables (what every process is blocked on); when one fails, it
+saves the kernel messages the test caused. To go further, with the kernel
+messages, `trace(1)`, panic stack traces and gdb attached to QEMU, see
+[Debugging](/en/docs/develop/debugging/).
 
 ## Further reading
 

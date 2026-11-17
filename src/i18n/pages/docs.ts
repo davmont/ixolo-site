@@ -42,6 +42,7 @@ export const groups: Group[] = [
       ['develop/building', 'Building from source', 'Compilar desde el código'],
       ['develop/drivers', 'Writing a driver', 'Escribir un driver'],
       ['develop/testing', 'Tests and continuous integration', 'Pruebas e integración continua'],
+      ['develop/debugging', 'Debugging', 'Depuración'],
       ['develop/contributing', 'Contributing and code style', 'Contribuir y estilo de código'],
     ],
   },

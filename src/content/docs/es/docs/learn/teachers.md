@@ -154,7 +154,8 @@ dárselas a los estudiantes.
   completa, quien modifica un servidor o un driver solo recompila esa parte
   y genera una imagen nueva.
 - **Depuración.** No hay gdb ni lldb en el sistema. Los estudiantes depuran
-  con `printf`, el log del núcleo, la consola serie y el monitor de QEMU.
+  con `printf`, el log del núcleo, la consola serie, `trace(1)` y gdb en el
+  anfitrión conectado a QEMU; consulta [Depuración](/es/docs/develop/debugging/).
   Planifica las prácticas teniéndolo en cuenta.
 - **No todo lo de upstream funciona.** La actualización en caliente no está
   disponible en amd64, i386 no compila y no hay repositorio de paquetes

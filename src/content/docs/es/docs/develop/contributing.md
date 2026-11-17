@@ -2,7 +2,7 @@
 title: "Contribuir y estilo de código"
 description: "Cómo enviar un cambio a {{name}}: ramas, pull requests, mensajes de commit, estilo de código, reglas de ABI, licencias y código de terceros."
 sidebar:
-  order: 4
+  order: 5
 ---
 
 {{name}} se desarrolla en abierto en [{{repo}}]({{repo}}). Los cambios llegan
