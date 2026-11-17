@@ -148,8 +148,9 @@ La imagen ocupa unos 2 GB: 128 MB de raíz, 1,75 GB de `/usr` y 128 MB de
 `/home`. A diferencia de `setup`, los pone en tres particiones primarias: `/`
 en `/dev/c0d0p0`, `/usr` en `c0d0p1` y `/home` en `c0d0p2`. Lleva más conjuntos que la ISO: `minix-comp` (cabeceras,
 bibliotecas y, salvo que compilaras con `MKLLVMCMDS=no`, el clang nativo),
-`minix-games` y los tests. Su menú tiene además una entrada *legacy PIC mode*
-para máquinas que no se llevan bien con el APIC. En esta imagen root no
+`minix-games` y el conjunto `tests` de NetBSD (ATF/kyua). Su menú tiene
+además una entrada *legacy PIC mode* para máquinas que no se llevan bien con
+el APIC. En esta imagen root no
 tiene contraseña: pon una con `passwd` nada más entrar.
 
 ## BIOS y UEFI: arranque desde disco

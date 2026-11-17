@@ -170,7 +170,8 @@ Vuelve a mirar `/proc/service/e1000_0`: `restarts` ha subido.
 Repítelo cuatro o cinco veces seguidas y mide cuánto tarda el driver en
 volver. RS espera más tras cada fallo (2, 4, 8, 16 segundos, como mucho 30)
 para que un driver que falla en cada arranque no pueda tener ocupada la
-máquina. Mientras espera, puede que la entrada no aparezca en `/proc/service`.
+máquina. Mientras espera, la entrada sigue apareciendo, pero su `pid` es el del
+proceso muerto.
 
 ## 5. Un driver de disco
 

@@ -76,7 +76,7 @@ Para saber qué servidor implementa cada llamada, mira la
 Las listas de fallos conocidos son el resumen honesto. Las dos están en el
 árbol:
 [`qemutest-posix.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-posix.xfail)
-(78 entradas, 12 de ellas marcadas como inestables) y
+(74 entradas, 11 de ellas marcadas como inestables) y
 [`qemutest-pjdfstest.xfail`]({{repo}}/blob/{{branch}}/releasetools/qemutest-pjdfstest.xfail)
 (8 entradas). Por categorías:
 
@@ -104,7 +104,9 @@ Las listas de fallos conocidos son el resumen honesto. Las dos están en el
   condición y de bloqueos con plazo.
 - *Tiempos.* Las entradas de AIO, `clock/1-1`, `sigwait/6-*` y
   `sched_setparam/27-1` son inestables: dependen de qué termina antes.
-- *Otras.* `killpg/1-2` y cuatro pruebas `sched_setparam/25-*` no compilan;
+  `munmap/1-1` y `pthread_create/14-1` también están marcadas como
+  inestables.
+- *Otras.* `killpg/1-2` y tres pruebas `sched_setparam/25-*` no compilan;
   `timer_create/10-1` necesita `_SC_CPUTIME`.
 
 **Lo que no mide ninguna de las dos**

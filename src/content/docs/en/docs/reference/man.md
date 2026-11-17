@@ -16,8 +16,7 @@ The pages come in the `minix-man` installation set and live under `/usr/man`.
 The ISO has carried that set since June 2026
 ([PR #165]({{repo}}/pull/165)). Before then `man` found nothing on the live
 CD. `setup` extracts every set on the CD, so an installed system has the
-pages too (with the workaround for its
-[amd64 path bug](/en/docs/start/install/)).
+pages too.
 
 ```sh
 man ls                 # a page, from the first section that has it

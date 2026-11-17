@@ -16,8 +16,7 @@ Las páginas vienen en el conjunto de instalación `minix-man` y se instalan en
 `/usr/man`. La ISO incluye ese conjunto desde junio de 2026
 ([PR #165]({{repo}}/pull/165)); antes, `man` no encontraba nada en el live
 CD. `setup` extrae todos los conjuntos del CD, así que un sistema instalado
-también tiene las páginas (aplicando la solución a su
-[fallo de rutas en amd64](/es/docs/start/install/)).
+también tiene las páginas.
 
 ```sh
 man ls                 # una página, de la primera sección que la tenga

@@ -106,7 +106,7 @@ devices or send messages to the disk driver.
 
 | Key | Meaning | Default |
 |---|---|---|
-| `uid` | User ID the service runs as. | `service` (uid 12) |
+| `uid` | User ID the service runs as. | `service` (uid 999) |
 | `ipc` | Processes it may send messages to: `ALL`, `ALL_SYS` (no user processes), `NONE`, or a list of program names. `SYSTEM` means the kernel, `USER` means user processes. | `ALL_SYS` |
 | `system` | Kernel calls it may make: `ALL`, `BASIC`, `NONE`, or a list. | `BASIC` |
 | `vm` | VM calls it may make, same forms as `system`. | `BASIC` |
@@ -140,8 +140,9 @@ What happens next:
 
 1. The first unexpected exit is restarted at once.
 2. Repeated exits are restarted after a delay that doubles each time (2, 4, 8,
-   16 s), up to 30 s. `-b` turns the delay off; a service restarted from an
-   in-memory copy (`-c`) waits at most one second.
+   16 s), up to 30 s. `-b` keeps the delay at one second instead of doubling
+   it; a service restarted from an in-memory copy (`-c`) waits at most one
+   second.
 3. If the service has a recovery script (`-script`), RS runs it instead, with
    the label, the reason (`terminated`, `no-heartbeat` or `restart`) and the
    restart count as arguments. The script decides what to do.
@@ -206,7 +207,7 @@ Some defaults worth knowing:
 | Variable | Default | Effect |
 |---|---|---|
 | `syslogd` | `YES` | System log to `/var/log/messages`. |
-| `cron` | `YES` | Periodic jobs. |
+| `cron` | `YES` | Periodic jobs. `/usr/etc/rc` starts cron on every boot except from CD; this variable is not read. |
 | `inetd` | `YES` | Internet super-server. |
 | `certctl_init` | `YES` | Fills `/etc/openssl/certs` on first boot. |
 | `sshd` | `NO` | OpenSSH server. See [security](/en/docs/admin/security/). |

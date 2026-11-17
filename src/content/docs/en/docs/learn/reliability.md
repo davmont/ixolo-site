@@ -15,10 +15,10 @@ This page explains both, and is honest about where recovery stops working.
 
 ## Least authority
 
-Every system service runs with the smallest set of rights it needs. RS reads
-those rights from `/etc/system.conf` and from the files in
-`/etc/system.conf.d/` when it starts the service, and tells the kernel. This
-is the real entry for the Intel network driver,
+Every system service runs with the smallest set of rights it needs.
+`minix-service` reads those rights from `/etc/system.conf` and from the files
+in `/etc/system.conf.d/` when it starts the service and passes them to RS,
+which tells the kernel. This is the real entry for the Intel network driver,
 [`minix/drivers/net/e1000/e1000.conf`]({{repo}}/blob/{{branch}}/minix/drivers/net/e1000/e1000.conf),
 abridged:
 
@@ -44,7 +44,7 @@ Each section is one kind of permission:
 
 | Keyword | What it limits | Enforced by |
 |---|---|---|
-| `system` | Which kernel calls the service may make. The e1000 driver may translate addresses (`UMAP`), manage its interrupt (`IRQCTL`) and do port I/O (`DEVIO`), and nothing else: it cannot, for example, create processes or change page tables. | kernel |
+| `system` | Which kernel calls the service may make. The e1000 driver may translate addresses (`UMAP`), manage its interrupt (`IRQCTL`) and do port I/O (`DEVIO`), and, beyond the basic calls every service gets (safe copies, timers, exit), nothing else: it cannot, for example, create processes or change page tables. | kernel |
 | `ipc` | Which processes it may send messages to. The driver can talk to the network stack, but not to VFS or to a disk driver. | kernel |
 | `io`, `irq` | Which I/O port ranges and interrupt lines it may use (for ISA-style devices; `at_wini` lists `1f0:8`, IRQ 14 and so on). | kernel |
 | `pci device`, `pci class` | Which PCI devices it may claim. Their memory and interrupt are granted from there. | PCI driver |
@@ -82,9 +82,10 @@ RS can restart the driver even when the disk it lives on is unreachable, and
 
 RS then watches for two kinds of failure:
 
-- **Crashes.** When a service dies (a segmentation fault, a `panic()`, a
-  `SIGKILL`), the kernel sends the signal to RS instead of to PM. RS marks the
-  service as terminated and starts recovery.
+- **Crashes.** When a service is killed by a fault (a segmentation fault) or
+  a signal such as `SIGKILL`, the kernel sends the signal to RS instead of to
+  PM. A service that calls `panic()` exits, and RS sees its child die. Either
+  way, RS marks the service as terminated and starts recovery.
 - **Hangs.** If a service has a period, RS sends it a notification every
   period. The service's library answers automatically from its message loop.
   If no answer has come after twice the period, RS kills the service and
@@ -105,16 +106,18 @@ The logic is in `terminate_service()` and `restart_service()` in
 2. Otherwise, the first time, RS restarts it at once from the same binary
    (or from the in-memory copy).
 3. If the service has failed before, RS waits first: 2 seconds after the
-   second failure, then 4, 8, 16, and at most 30 seconds. This **binary
+   second failure, then 4, 8, 16, and at most 30 seconds (services started
+   with `-c`, such as disk drivers, wait at most 1 second). This **binary
    exponential backoff** stops a driver that crashes on every start from
    eating the machine. `minix-service up -b` turns it off.
 4. If the service fails while it is still initialising, RS gives up and
    leaves it down. The rest of the system keeps running without it.
 
-When the new copy is up, RS publishes its endpoint in DS, the data store.
-Servers that depend on drivers have subscribed to those entries: VFS watches
-`drv.blk.*` and `drv.chr.*`, the network stack watches `drv.net.*`. DS tells
-them the driver has a new endpoint, and they resend whatever was in flight.
+When the new copy is up, RS publishes its label and endpoint in DS, the data
+store, and the driver announces itself under `drv.blk.<label>`,
+`drv.chr.<label>` or `drv.net.<label>`. Servers that depend on drivers have
+subscribed to those entries: VFS watches `drv.blk.*` and `drv.chr.*`, the
+network stack watches `drv.net.*`. DS tells them the driver has a new endpoint, and they resend whatever was in flight.
 
 DS can also hold small amounts of state (numbers, strings, memory blobs) under
 a name, so a restarted component can pick up where the old one left off.

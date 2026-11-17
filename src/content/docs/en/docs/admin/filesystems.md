@@ -183,9 +183,10 @@ of the string goes to the server.
 ## ext2, ext3 and ext4
 
 The `ext2` server reads and writes Linux ext2, ext3 and ext4 volumes,
-including extents, 64-bit block numbers, `metadata_csum` checksums, htree
-directories, files over 2 GB, extended attributes and ACLs. It processes the
-orphan list on mount.
+including extents, 64-bit block numbers, `metadata_csum` checksums,
+htree-indexed directories (read as linear directories; the index is dropped
+when the server modifies one), files over 2 GB, extended attributes and ACLs.
+It processes the orphan list on mount.
 
 What it does not do:
 

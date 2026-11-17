@@ -81,8 +81,8 @@ From then on, RS starts everything else on request of the startup scripts:
    starts `acpi`, `pci`, `input`, `pckbd`, the disk driver it finds (`nvme`,
    `ahci`, `virtio_blk` or `at_wini`) and `procfs`, then mounts the real root.
 2. [`/etc/rc.minix`]({{repo}}/blob/{{branch}}/etc/rc.minix) starts `is`
-   (debug dumps), `random`, `readclock.drv`, `usbd` and `devmand`, and mounts a
-   `tmpfs` on `/var/shm`.
+   (debug dumps), `random`, `readclock.drv` and `usbd`, and mounts a `tmpfs`
+   on `/var/shm`.
 3. [`/usr/etc/rc`]({{repo}}/blob/{{branch}}/etc/usr/rc) starts one network
    driver per network card it finds on the PCI bus, then `pty`, `lwip`, `uds`,
    `ipc` and `log`.
@@ -135,8 +135,9 @@ message passing has to be fast. On amd64 {{name}} has two optimisations:
 - a **fast path** for `sendrec` when the receiver is already waiting: the
   kernel copies the message and, if both run on the same CPU, switches
   straight to the receiver without going through the run queue;
-- **server colocation**: SCHED counts which CPU each server's requests come
-  from, and moves the server to that CPU when one CPU sends most of them
+- **server colocation**: the kernel counts which CPU each server's requests
+  come from, and SCHED moves the server to that CPU when one CPU sends most
+  of them
   (VFS, VM, RS and SCHED itself stay where they are).
 
 Measured when they were merged, on four CPUs (`-smp 4`), the two together cut

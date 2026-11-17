@@ -137,7 +137,7 @@ Las claves que más usarás:
 | `irq` | Líneas de interrupción | ninguna |
 | `pci device` | Dispositivos PCI que puede reclamar, `fabricante:dispositivo` | ninguno |
 | `pci class` | Clases PCI que puede reclamar, `clase/subclase/interfaz` | ninguna |
-| `uid` | Usuario con el que se ejecuta | 12 (`service`) |
+| `uid` | Usuario con el que se ejecuta | 999 (`service`) |
 
 Un driver PCI real necesita menos líneas de lo que parece, porque al reclamar
 un dispositivo PCI recibe también sus puertos de E/S, sus rangos de memoria y
@@ -345,9 +345,12 @@ entry = nvme_msix_table + nvme_msix_toff;            /* entrada 0 de la tabla */
 *(volatile u32_t *)(entry + MSIX_VEC_CTRL) = 0;      /* desenmascarar */
 ```
 
-La llamada devuelve `ENOSYS` cuando el núcleo funciona sin APIC, así que ten
-una alternativa: NVMe pasa a sondeo. Los vectores salen de una reserva pequeña
-(32), así que usa uno por dispositivo cuando puedas.
+La llamada puede fallar: `EINVAL` cuando el núcleo funciona con la APIC
+desactivada, `ENOSPC` cuando se agota la reserva de vectores y `ENOSYS` en un
+núcleo compilado sin soporte de APIC. NVMe pasa a sondeo solo cuando el
+dispositivo no tiene MSI-X utilizable; si falla la propia
+`sys_irqsetpolicy_msi()`, falla el inicio de NVMe. Los vectores salen de una
+reserva pequeña (32), así que usa uno por dispositivo cuando puedas.
 
 ### DMA y memoria física
 
@@ -381,11 +384,13 @@ eso:
   arranca de nuevo como si fuera la primera vez, lo que para muchos drivers es
   razonable.
 - **Guarda fuera del proceso lo que deba sobrevivir.** El servidor de almacén
-  de datos (DS) guarda valores pequeños con nombre. `hello` guarda su contador
-  de aperturas con `ds_publish_u32("open_counter", open_counter, DSF_OVERWRITE)`
-  y lo recupera con `ds_retrieve_u32()`. Un driver que quiera conservar estado
-  tras una caída tiene que publicarlo sobre la marcha, porque al morir no tiene
-  ocasión de guardar nada.
+  de datos (DS) guarda valores pequeños con nombre. `hello` usa DS solo para
+  la actualización en caliente: guarda su contador de aperturas con
+  `ds_publish_u32("open_counter", open_counter, DSF_OVERWRITE)` antes de la
+  actualización y lo recupera con `ds_retrieve_u32()`; tras un reinicio pone
+  el contador a 0. Un driver que quiera conservar estado tras una caída tiene
+  que publicarlo sobre la marcha, porque al morir no tiene ocasión de guardar
+  nada.
 - **Vuelve a anunciarte.** Llamar a `chardriver_announce()` o
   `blockdriver_announce()` desde el inicio comunica a VFS el endpoint nuevo del
   driver, para que las peticiones lleguen a la copia nueva.

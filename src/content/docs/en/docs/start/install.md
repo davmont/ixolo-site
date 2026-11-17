@@ -144,9 +144,9 @@ Unlike `setup`, it puts them on three primary partitions: `/` on
 `/dev/c0d0p0`, `/usr` on `c0d0p1` and `/home` on `c0d0p2`. It
 carries more sets than the ISO: `minix-comp` (headers, libraries and, unless
 you built with `MKLLVMCMDS=no`, the native clang), `minix-games` and the
-tests. Its menu also has a *legacy PIC mode* entry for machines that do not
-get along with the APIC. Root has no password on this image: set one with
-`passwd` straight away.
+NetBSD `tests` set (ATF/kyua). Its menu also has a *legacy PIC mode* entry
+for machines that do not get along with the APIC. Root has no password on
+this image: set one with `passwd` straight away.
 
 ## BIOS and UEFI disk boot
 
